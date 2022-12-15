@@ -1,0 +1,14 @@
+package models
+
+import "time"
+
+// a thread comment has an unique ID, title, content, thread ID, author, author's ID
+type comment struct {
+	ID         string `json:"id"`
+	Content    string `json:"content"`
+	Author     user   `json:"author"`
+	AuthorID   uint32 `json:"authorid"`
+	ThreadID   uint32 `json:"threadid"`
+	CreatedAt  time.Time
+	ModifiedAt time.Time
+}
