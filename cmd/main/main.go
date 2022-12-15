@@ -22,9 +22,9 @@ package main //declare main package (groups functions)
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 /*
@@ -36,8 +36,9 @@ func main() {
 	//creation of a new router of name "router"
 	router := chi.NewRouter()
 
-	//use the logger from the logging package to log http requests and responses
-	router.Use(logger)
+	//use the go-chi inbuilt logger to log http requests and responses
+	router.Use(middleware.Logger)
+	router.Use(middleware.Recoverer)
 
 	//allow for static file serving
 	//FileServer function creates a handler that will serve files from the directory
@@ -72,20 +73,15 @@ func main() {
 	//use router to start the server
 	//if there is error starting server (error value is not nil), error message is printed and program exits
 	err := http.ListenAndServe(":3000", router)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
+	catch(err)
 }
 
-/*
-The handler function has two input parameters—a ResponseWriter interface and a pointer to a Request struct.
-It takes information from the Request to create an HTTP response, which is sent out through the ResponseWriter.
-*/
+// define a function that catches errors by printing error message and panicks to stop execution
+// the Recoverer middleware then recovers the server, logs the error with a stack trace, and sends a 500 Internal Server Error response to the client
+func catch(err error) {
+	if err != nil {
+		log.Println(err)
+		panic(err)
+	}
 
-/*
-First, you set up the handler you defined earlier to trigger when the root URL (/) is called.
-Then you start the server to listen to port 8080
-*/
-
-func home(writer http.ResponseWriter, request *http.Request)
+}
