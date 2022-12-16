@@ -25,6 +25,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/spinoandraptos/forumproject/Server/handlers"
 )
 
 /*
@@ -40,14 +41,8 @@ func main() {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 
-	//allow for static file serving
-	//FileServer function creates a handler that will serve files from the directory
-	//the handler is passed to the Handle function of the router, and the StripPrefix function removes the given prefix from the request URL’s path
-	fs := http.FileServer(http.Dir("/public"))
-	router.Handle("/static/", http.StripPrefix("/static/", fs))
-
 	//Register endpoints (GET, POST, PUT, DELETE) with their respective paths
-	//route handler functions are defined under the respective models
+	//route handler functions are defined under the respective handler files
 	router.Get("/users/{userid}", viewUser)
 	router.Get("/users/login", userLogin)
 	router.Get("/users/logout", userLogout)
