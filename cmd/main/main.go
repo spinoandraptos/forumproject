@@ -1,13 +1,10 @@
-/*
-	This file is the entry point for the app
-	It contains the parent router which all sub-routers will mount to
-*/
+//This file is the entry point for the app
 
-package main //declare main package (groups functions)
+package main
 
 /*
-	import seven standard library packages:
-	the package which contains functions for formatting I/Otext (fmt),
+	import standard library packages:
+	the package which contains functions for formatting I/O text (fmt),
 	the HTTP networking package(net/http),
 	the package that providesa platform-independent interface to operating system functionality (os),
 	the package which contains functions for manipulating errors (errors)
@@ -25,8 +22,16 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/spinoandraptos/forumproject/Server/handlers"
 )
+
+// define a function that catches errors by printing error message and panicks to stop execution
+// the Recoverer middleware then recovers the server, logs the error with a stack trace, and sends a 500 Internal Server Error response to the client
+func catch(err error) {
+	if err != nil {
+		log.Println(err)
+		panic(err)
+	}
+}
 
 /*
 route definitions: all HTTP requests will be directed by the Chi Router to the respective handlers
@@ -42,41 +47,38 @@ func main() {
 	router.Use(middleware.Recoverer)
 
 	//Register endpoints (GET, POST, PUT, DELETE) with their respective paths
+	//routes are grouped under 2 branches: one for users and one for categories
 	//route handler functions are defined under the respective handler files
-	router.Get("/users/{userid}", viewUser)
-	router.Get("/users/login", userLogin)
-	router.Get("/users/logout", userLogout)
-	router.Get("/categories", viewCategories)
-	router.Get("/categories/{categoryid}/", viewCategory)
-	router.Get("/categories/{categoryid}/threads", viewThreads)
-	router.Get("/categories/{categoryid}/threads/{threadid}", viewThread)
-	router.Get("/categories/{categoryid}/threads/{threadid}/comments", viewComments)
-	router.Get("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", viewComment)
 
-	router.Post("/users", createUser)
-	router.Post("/categories/{categoryid}/threads", createThread)
-	router.Post("/categories/{categoryid}/threads/{threadid}/comments", createComment)
+	router.Route("/users", func(r chi.Router) {
+		r.Get("/login", userLogin)
+		r.Get("/logout", userLogout)
+		r.Get("/{userid}", viewUser)
+		r.Post("/", createUser)
+		r.Put("/{userid}", updateUser)
+		r.Delete("/{userid}", deleteUser)
+	})
 
-	router.Put("/users/{userid}", updateUser)
-	router.Put("/categories/{categoryid}/threads/{threadid}", updateThread)
-	router.Put("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", updateComment)
+	router.Route("/categories", func(r chi.Router) {
+		r.Get("/", viewCategories)
+		r.Get("/{categoryid}", viewCategory)
+		r.Get("/{categoryid}/threads", viewThreads)
+		r.Get("/{categoryid}/threads/{threadid}", viewThread)
+		r.Get("/{categoryid}/threads/{threadid}/comments", viewComments)
+		r.Get("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", viewComment)
 
-	router.Delete("/users/{userid}", deleteUser)
-	router.Delete("/categories/{categoryid}/threads/{threadid}", deleteThread)
-	router.Delete("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", deleteComment)
+		router.Post("/{categoryid}/threads", createThread)
+		router.Post("/{categoryid}/threads/{threadid}/comments", createComment)
+
+		router.Put("/{categoryid}/threads/{threadid}", updateThread)
+		router.Put("/{categoryid}/threads/{threadid}/comments/{commentid}", updateComment)
+
+		router.Delete("/{categoryid}/threads/{threadid}", deleteThread)
+		router.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", deleteComment)
+	})
 
 	//use router to start the server
 	//if there is error starting server (error value is not nil), error message is printed and program exits
 	err := http.ListenAndServe(":3000", router)
 	catch(err)
-}
-
-// define a function that catches errors by printing error message and panicks to stop execution
-// the Recoverer middleware then recovers the server, logs the error with a stack trace, and sends a 500 Internal Server Error response to the client
-func catch(err error) {
-	if err != nil {
-		log.Println(err)
-		panic(err)
-	}
-
 }
