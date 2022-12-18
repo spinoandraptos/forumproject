@@ -31,7 +31,8 @@ create table threads (
   Content     text,  
   AuthorID    integer references users(ID),
   CategoryID  integer references categories(ID),
-  CreatedAt   timestamp not null     
+  CreatedAt   timestamp not null,
+  UpdatedAt   timestamp not null
 );
 
 create table comments (
@@ -39,5 +40,6 @@ create table comments (
   Content     text,
   AuthorID    integer references users(ID),
   ThreadID    integer references threads(ID),
-  created_at  timestamp not null
+  CreatedAt  timestamp not null,
+  UpdatedAt   timestamp not null
 );

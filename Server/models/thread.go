@@ -1,9 +1,10 @@
 package models
 
 import (
-	"database/sql"
 	"log"
 	"time"
+
+	"github.com/spinoandraptos/forumproject/Server/database"
 )
 
 // a forum thread has an unique ID, title, content, category ID, author, author's ID and records the time of its creation or update
@@ -18,14 +19,12 @@ type Thread struct {
 	ModifiedAt time.Time
 }
 
-var DB *sql.DB
-
 // to retrieve all created threads from the database
 // we select every row from the threads table and sort by most recent thread on top
 // then we store every row in a thread and append the thread to a slice of threads
 // finally we and close the database connection
-func retrieveAllThreads() (threadSlice []Thread, err error) {
-	posts, err := DB.Query("SELECT * FROM threads ORDER BY CreatedAt DESC")
+func RetrieveAllThreads() (threadSlice []Thread, err error) {
+	posts, err := database.DB.Query("SELECT * FROM threads ORDER BY CreatedAt DESC")
 	if err != nil {
 		log.Println(err)
 		panic(err)
