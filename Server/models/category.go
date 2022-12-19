@@ -1,9 +1,8 @@
 package models
 
 import (
-	"log"
-
 	"github.com/spinoandraptos/forumproject/Server/database"
+	"github.com/spinoandraptos/forumproject/Server/helper"
 )
 
 // a forum category has an unique ID, title and description
@@ -20,15 +19,13 @@ type Category struct {
 func RetrieveAllCategories() (categorySlice []Category, err error) {
 	categories, err := database.DB.Query("SELECT * FROM threads ORDER BY CreatedAt DESC")
 	if err != nil {
-		log.Println(err)
-		panic(err)
+		helper.Catch(err)
 	}
 	for categories.Next() {
 		var category Category
 		err = categories.Scan(&category.ID, &category.Title, &category.Description)
 		if err != nil {
-			log.Println(err)
-			panic(err)
+			helper.Catch(err)
 		}
 		categorySlice = append(categorySlice, category)
 	}

@@ -27,16 +27,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/handlers"
+	"github.com/spinoandraptos/forumproject/Server/helper"
 )
-
-// define a function that catches errors by printing error message and panicks to stop execution
-// the Recoverer middleware then recovers the server, logs the error with a stack trace, and sends a 500 Internal Server Error response to the client
-func catch(err error) {
-	if err != nil {
-		log.Println(err)
-		panic(err)
-	}
-}
 
 // define the init function which connects to the postgresql database
 // this will be run before main() as database package will be imported into main package
@@ -50,9 +42,9 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = database.DB.Ping()
+	pingErr := database.DB.Ping()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(pingErr)
 	} else {
 		fmt.Println("Successful Connection")
 	}
@@ -74,8 +66,8 @@ func main() {
 	//create a fileserver that serves files out of the "./frontend/public" directory
 	//the router.Handle() function registers the file server as the handler for all URL paths that start with "/static""
 	//for matching paths, the "/static" prefix is stripped before the request reaches the file server
-	fileServer := http.FileServer(http.Dir("./frontend/public/"))
-	router.Handle("/static", http.StripPrefix("/static", fileServer))
+	//fileServer := http.FileServer(http.Dir("./frontend/public/"))
+	//router.Handle("/static", http.StripPrefix("/static", fileServer))
 
 	//Register endpoints (GET, POST, PUT, DELETE) with their respective paths
 	//routes are grouped under 3 branches: one standalone for entry page, one for users and one for categories
@@ -85,7 +77,8 @@ func main() {
 
 	router.Route("/users", func(r chi.Router) {
 		r.Post("/login", handlers.UserLogin)
-		r.Post("/{userid}", handlers.UserLogout)
+		r.Post("/login/authenticate", handlers.UserAuthentication)
+		r.Post("/{userid}/logout", handlers.UserLogout)
 		r.Get("/{userid}", handlers.ViewUser)
 		r.Post("/signup", handlers.CreateUser)
 		r.Put("/{userid}", handlers.UpdateUser)
@@ -111,7 +104,7 @@ func main() {
 	})
 
 	//use router to start the server
-	//if there is error starting server (error value is not nil), error message is printed and program exits
+	//if there is error starting server (error value is not nil), error message is printed
 	err := http.ListenAndServe(":3000", router)
-	catch(err)
+	helper.Catch(err)
 }

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
+	"html/template"
 	"net/http"
 	"strconv"
 	"time"
@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
+	"github.com/spinoandraptos/forumproject/Server/helper"
 	"github.com/spinoandraptos/forumproject/Server/models"
 )
 
@@ -29,21 +30,43 @@ import (
 func ViewUser(w http.ResponseWriter, r *http.Request) {
 
 	userid, err := strconv.Atoi(chi.URLParam(r, "userid"))
-	if err != nil {
-		helper.catch(err)
-	}
+	helper.Catch(err)
+
 	var human models.User
 	response := database.DB.QueryRow("SELECT * FROM users WHERE ID = $1", userid)
 	err = response.Scan(&human.ID, &human.Username, &human.Password, &human.CreatedAt, &human.UpdatedAt)
-	if err != nil {
-		catch(err)
-	}
+	helper.Catch(err)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(human)
 
+	t, err := template.ParseFiles()
+	helper.Catch(err)
+	t.Execute(w, nil)
 }
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles()
+	helper.Catch(err)
+	t.Execute(w, nil)
+}
+
+func UserAuthentication(w http.ResponseWriter, r *http.Request) {
+
+	var human models.User
+	var humanTest models.User
+	json.NewDecoder(r.Body).Decode(&human)
+	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1", human.Username)
+	err := response.Scan(&humanTest.ID, &humanTest.Username, &humanTest.Password, &humanTest.CreatedAt, &humanTest.UpdatedAt)
+	if err != nil {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Unable to Find User :(")
+	}
+	if human.Password == humanTest.Password {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Logged In Successfully!", "jwt": "12323432"})
+	} else {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Login Failed, Please Check Password is Correct :(")
+	}
+
 	w.Write([]byte("HELLO!"))
 }
 
@@ -65,17 +88,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&human)
 
 	response, err := database.DB.Exec("INSERT INTO users (ID, Username, Password, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5)", &human.ID, &human.Username, &human.Password, time.Now(), time.Now())
-	catch(err)
+	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()
-	catch(err)
-
-	w.Header().Set("Content-Type", "application/json")
+	helper.Catch(err)
 
 	if rowsAffected == 0 {
-		w.Write([]byte("User Creation Failed :("))
+		helper.RespondwithERROR(w, http.StatusBadRequest, "User Creation Failed :(")
 	} else {
-		w.Write([]byte("User Created Successfully!"))
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "User Created Successfully!", "jwt": "1234456"})
 	}
 }
 
@@ -93,24 +114,20 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var human models.User
 
 	userid, err := strconv.Atoi(chi.URLParam(r, "userid"))
-	if err != nil {
-		log.Println(err)
-	}
+	helper.Catch(err)
 
 	json.NewDecoder(r.Body).Decode(&human)
 
 	response, err := database.DB.Exec("UPDATE users SET Username = $2, Password = $3, UpdatedAt = $4 WHERE ID = $1", userid, &human.Username, &human.Password, time.Now())
-	catch(err)
+	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()
-	catch(err)
-
-	w.Header().Set("Content-Type", "application/json")
+	helper.Catch(err)
 
 	if rowsAffected == 0 {
-		helper.respondWithJSON(w)
+		helper.RespondwithERROR(w, http.StatusBadRequest, "User Update Failed :(")
 	} else {
-		w.Write([]byte("User Updated Successfully!"))
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "User Updated Successfully!"})
 	}
 }
 
@@ -127,23 +144,19 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	var human models.User
 
 	userid, err := strconv.Atoi(chi.URLParam(r, "userid"))
-	if err != nil {
-		log.Println(err)
-	}
+	helper.Catch(err)
 
 	json.NewDecoder(r.Body).Decode(&human)
 
 	response, err := database.DB.Exec("DELETE * FROM users WHERE ID = $1", userid)
-	catch(err)
+	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()
-	catch(err)
-
-	w.Header().Set("Content-Type", "application/json")
+	helper.Catch(err)
 
 	if rowsAffected == 0 {
-		w.Write([]byte("User Deletion Failed :("))
+		helper.RespondwithERROR(w, http.StatusBadRequest, "User Deletion Failed :(")
 	} else {
-		w.Write([]byte("User Deleted Successfully!"))
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "User Deleted Successfully!"})
 	}
 }
