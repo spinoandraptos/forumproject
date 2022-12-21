@@ -6,12 +6,22 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Homepage from './components/HomepageLayout';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import Loginpage from "./components/LoginpageLayout";
+import Registerpage from "./components/RegisterpageLayout";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Homepage />
+    <BrowserRouter>
+      <Homepage>
+        <Routes>
+          <Route exact path="/login" element={<Loginpage />} />
+          <Route exact path="/register" element={<Registerpage />} />
+        </Routes>
+      </Homepage>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

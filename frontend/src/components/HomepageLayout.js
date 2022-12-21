@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./HomepageLayout.css";
+import "./userpage"
 
 //define the function homepage that will serve as the component rendering the homepage upon entry
 //first create the category state and state update function using the state hook useState
@@ -38,16 +40,16 @@ export default function Homepage() {
           </div>
           <header id = "homepageheader">
             <div className = "headerlinks">
-              <a href = "/register">
+              <Link to = "/register">
                 <button className="headerbutton">
                   Register
                 </button>
-              </a>
-              <a href = "/login">
+              </Link>
+              <Link to = "/login">
                 <button className="headerbutton">
                   Login
                 </button>
-              </a>
+              </Link>
             </div>
           </header>
           {categories?.map(category => (
@@ -58,7 +60,9 @@ export default function Homepage() {
               <div className="categorycontent">
                 {category.description}
               </div>
-          
+              <button className="categorybutton">
+                Check out the threads in this category!
+              </button>
             </div>
           ))}
         </div>

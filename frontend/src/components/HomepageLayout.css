@@ -5,11 +5,12 @@
     background-repeat: no-repeat;
     align-items: center;
     justify-content: center;
-    background-image: url(https://wallpapercave.com/wp/wp5924549.jpg);
+    background-image: url(C:\Users\Juncheng\Documents\NUS\forumproject\frontend\public\headerimage.jpg);
     height:8vmax;
 }
 
 .herotext {
+    color: ghostwhite;
     text-align: left;
     transform: translate(+3%, +20%);
     font-weight: 600;
@@ -28,7 +29,7 @@
 
 .headerbutton {
     background-color:white;
-    color: navy;
+    color: #063970;
     text-align: center;
     font-size: calc(10px + 1vmax);
     cursor: pointer;
@@ -39,7 +40,7 @@
 }
 
 .headerbutton:hover {
-    background-color: navy;
+    background-color: #063970;
     color: ghostwhite;
 }
 
@@ -47,7 +48,7 @@
     align-items: center;
     padding: 1.6vmax;
     padding-left: 4vmax;
-    background-color: antiquewhite;
+    background-color: #063970;
     margin:2vmax;
 }
 
@@ -56,12 +57,29 @@
     font-size: calc(10px + 1vmax);
     font-weight: bold;
     padding-bottom: 1vmax;
-    background-color: aqua;
+    color: ghostwhite;
 }
 
 .categorycontent {
     display: flex;
     font-size: calc(10px + 0.7vmax);
-    background-color: azure;
+    color: ghostwhite;
+    width: 35vw;
 }
 
+.categorybutton {
+    display: flex;
+    float: right;
+    padding: 0.7vmax;
+    transform: translate(0%, -100%);
+    border-radius: 1vmax;
+    color: #063970;
+    font-size: calc(5px + 0.6vmax);
+    border-color: #063970;
+}
+
+.categorybutton:hover {
+    color: ghostwhite;
+    background-color: #4e82b8;
+    border-color: ghostwhite;
+}
