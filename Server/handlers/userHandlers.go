@@ -39,10 +39,6 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(human)
-
-	t, err := template.ParseFiles()
-	helper.Catch(err)
-	t.Execute(w, nil)
 }
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {

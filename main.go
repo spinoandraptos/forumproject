@@ -6,14 +6,14 @@ package main
 	import standard library packages:
 	the package which contains functions for formatting I/O text (fmt),
 	the HTTP networking package(net/http),
-	the package that providesa platform-independent interface to operating system functionality (os),
-	the package which contains functions for manipulating errors (errors)
 	the logging package (log)
-	the package which contains functions for manipulating UTF-8 encoded strings (strings)
-	the package which provide functionality for measuring and displaying time (time)
+	the sql package with the corresponding postgres driver for working with database
 
-	and one third-party package:
+	and third-party packages:
 	the go-chi framework package
+	tne go-chi middleware package
+	the go-chi cors package
+	other custom packages used in this project
 */
 
 import (
@@ -24,6 +24,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/handlers"
@@ -63,11 +64,16 @@ func main() {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 
-	//create a fileserver that serves files out of the "./frontend/public" directory
-	//the router.Handle() function registers the file server as the handler for all URL paths that start with "/static""
-	//for matching paths, the "/static" prefix is stripped before the request reaches the file server
-	//fileServer := http.FileServer(http.Dir("./frontend/public/"))
-	//router.Handle("/static", http.StripPrefix("/static", fileServer))
+	//using the cors middleware to perform preflight CORS checks on the server side
+	//this ensures that the server only permits browser requests fulfilling the below requirements which reduces potential misuse
+	router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 
 	//Register endpoints (GET, POST, PUT, DELETE) with their respective paths
 	//routes are grouped under 3 branches: one standalone for entry page, one for users and one for categories
@@ -86,11 +92,11 @@ func main() {
 	})
 
 	router.Route("/", func(r chi.Router) {
-		r.Get("/", handlers.MainPage)
+		r.Get("/", handlers.ViewCategories)
 		r.Get("/{categoryid}", handlers.ViewCategory)
-		r.Get("/{categoryid}/threads", handlers.ThreadsPage)
+		r.Get("/{categoryid}/threads", handlers.ViewThreads)
 		r.Get("/{categoryid}/threads/{threadid}", handlers.ViewThread)
-		r.Get("/{categoryid}/threads/{threadid}/comments", handlers.CommmentsPage)
+		r.Get("/{categoryid}/threads/{threadid}/comments", handlers.ViewComments)
 		r.Get("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
 
 		router.Post("/{categoryid}/threads", handlers.CreateThread)

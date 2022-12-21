@@ -1,0 +1,67 @@
+.herocontent {
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    align-items: center;
+    justify-content: center;
+    background-image: url(https://wallpapercave.com/wp/wp5924549.jpg);
+    height:8vmax;
+}
+
+.herotext {
+    text-align: left;
+    transform: translate(+3%, +20%);
+    font-weight: 600;
+    font-size: calc(10px + 3vmax);
+}
+
+.headerlinks {
+    display: flex;
+    padding-top: 1.2vmax;
+    padding-right: 1vmax;
+    justify-content: end;
+    align-items:flex-end;
+    transform: translate(-3%, 20%);
+    padding-bottom: 1vmax;
+}
+
+.headerbutton {
+    background-color:white;
+    color: navy;
+    text-align: center;
+    font-size: calc(10px + 1vmax);
+    cursor: pointer;
+    border: none;
+    padding: 0.3vmax 0.7vmax;
+    margin-left: 1vmax;
+    border-radius: 0.5vmax;
+}
+
+.headerbutton:hover {
+    background-color: navy;
+    color: ghostwhite;
+}
+
+.indivcategory {
+    align-items: center;
+    padding: 1.6vmax;
+    padding-left: 4vmax;
+    background-color: antiquewhite;
+    margin:2vmax;
+}
+
+.categorytitle {
+    display: flex;
+    font-size: calc(10px + 1vmax);
+    font-weight: bold;
+    padding-bottom: 1vmax;
+    background-color: aqua;
+}
+
+.categorycontent {
+    display: flex;
+    font-size: calc(10px + 0.7vmax);
+    background-color: azure;
+}
+

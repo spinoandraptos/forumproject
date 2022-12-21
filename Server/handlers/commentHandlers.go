@@ -12,6 +12,25 @@ import (
 	"github.com/spinoandraptos/forumproject/Server/models"
 )
 
+func ViewComments(w http.ResponseWriter, r *http.Request) {
+
+	var allcomments []models.Comment
+	comments, err := database.DB.Query("SELECT * FROM threads ORDER BY CreatedAt DESC")
+	if err != nil {
+		helper.Catch(err)
+	}
+	for comments.Next() {
+		var reply models.Comment
+		err = comments.Scan(&reply.ID, &reply.Content, &reply.AuthorID, &reply.ThreadID, &reply.CreatedAt, &reply.UpdatedAt)
+		if err != nil {
+			helper.Catch(err)
+		}
+		allcomments = append(allcomments, reply)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(allcomments)
+}
+
 func ViewComment(w http.ResponseWriter, r *http.Request) {
 
 	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
@@ -46,8 +65,11 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	rowsAffected, err := response.RowsAffected()
 	helper.Catch(err)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(rowsAffected)
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Comment Creation Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Comment Created Successfully!"})
+	}
 }
 
 func UpdateComment(w http.ResponseWriter, r *http.Request) {
@@ -74,8 +96,11 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 	rowsAffected, err := response.RowsAffected()
 	helper.Catch(err)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(rowsAffected)
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Comment Update Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Comment Updated Successfully!"})
+	}
 }
 
 func DeleteComment(w http.ResponseWriter, r *http.Request) {
@@ -102,6 +127,9 @@ func DeleteComment(w http.ResponseWriter, r *http.Request) {
 	rowsAffected, err := response.RowsAffected()
 	helper.Catch(err)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(rowsAffected)
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Comment Deletion Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Comment Deleted Successfully!"})
+	}
 }

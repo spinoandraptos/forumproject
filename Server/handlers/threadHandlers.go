@@ -12,6 +12,25 @@ import (
 	"github.com/spinoandraptos/forumproject/Server/models"
 )
 
+func ViewThreads(w http.ResponseWriter, r *http.Request) {
+
+	var allthreads []models.Thread
+	threads, err := database.DB.Query("SELECT * FROM threads ORDER BY CreatedAt DESC")
+	if err != nil {
+		helper.Catch(err)
+	}
+	for threads.Next() {
+		var post models.Thread
+		err = threads.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt)
+		if err != nil {
+			helper.Catch(err)
+		}
+		allthreads = append(allthreads, post)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(allthreads)
+}
+
 func ViewThread(w http.ResponseWriter, r *http.Request) {
 
 	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
@@ -42,8 +61,11 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 	rowsAffected, err := response.RowsAffected()
 	helper.Catch(err)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(rowsAffected)
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Creation Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Created Successfully!"})
+	}
 }
 
 func UpdateThread(w http.ResponseWriter, r *http.Request) {
@@ -66,8 +88,11 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	rowsAffected, err := response.RowsAffected()
 	helper.Catch(err)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(rowsAffected)
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Update Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Updated Successfully!"})
+	}
 }
 
 func DeleteThread(w http.ResponseWriter, r *http.Request) {
@@ -90,6 +115,9 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	rowsAffected, err := response.RowsAffected()
 	helper.Catch(err)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(rowsAffected)
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Deletion Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Deleted Successfully!"})
+	}
 }
