@@ -49,7 +49,7 @@ func ViewThread(w http.ResponseWriter, r *http.Request) {
 	}
 	var post models.Thread
 	response := database.DB.QueryRow("SELECT * FROM threads WHERE ID = $1 AND CategoryID = $2", threadid, categoryid)
-	err = response.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.Authorusername, &post.CategoryID, &post.CreatedAt)
+	err = response.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.Authorusername)
 	helper.Catch(err)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)

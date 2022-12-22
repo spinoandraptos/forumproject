@@ -1,10 +1,11 @@
 import React from "react"
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Loginpage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleUsername = (input) => {
       setUsername(input.target.value);
@@ -28,6 +29,7 @@ export default function Loginpage() {
         if (response.ok) {
             console.log("Response:" + response)
             alert("Login Successful!")
+            navigate("/")
         } else if (response.status === 400) {
           alert("Username not Found")
         } else if (response.status === 401) {

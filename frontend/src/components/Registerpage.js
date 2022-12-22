@@ -1,11 +1,12 @@
 import React from "react"
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Registerpage() {
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleUsername = (input) => {
     setUsername(input.target.value);
@@ -29,7 +30,8 @@ export default function Registerpage() {
       if (response.ok) {
           console.log("Response:" + response)
           alert("User Creation Successful!")
-      } else if (response.status === 400) {
+          navigate("/users/login")
+      } else if (!response.ok) {
         alert("User Creation Failed")
       }
     })
@@ -73,11 +75,11 @@ export default function Registerpage() {
       </div>
       <div className="bottomlink">
         <div className="signup">
-          <Link to = "/users/login">
-            <button className="footerbutton">
+            Already Have An Account?
+            <br/>
+            <Link to = "/users/login">
               Login Here!
-            </button>
-          </Link>
+            </Link>
         </div>
         <br />
         <Link to = "/">
