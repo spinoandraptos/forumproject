@@ -1,7 +1,8 @@
+import React from "react"
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./HomepageLayout.css";
-import "./userpage"
+import "./Forum.css";
+import "./Userpage"
 
 //define the function homepage that will serve as the component rendering the homepage upon entry
 //first create the category state and state update function using the state hook useState
@@ -25,9 +26,9 @@ export default function Homepage() {
         throw new Error("Fetch Error");
         })
         .then((categorydata) => {
-            console.log("Data:" + JSON.stringify(categorydata))
+            console.log("Data:" + categorydata)
             setCategories(categorydata);
-            console.log("Final:" + categories)
+            console.log("Final:" + JSON.stringify(categories))
         });
     }, []);
 
@@ -40,12 +41,12 @@ export default function Homepage() {
           </div>
           <header id = "homepageheader">
             <div className = "headerlinks">
-              <Link to = "/register">
+              <Link to = "/users/signup">
                 <button className="headerbutton">
                   Register
                 </button>
               </Link>
-              <Link to = "/login">
+              <Link to = "/users/login">
                 <button className="headerbutton">
                   Login
                 </button>
@@ -60,9 +61,11 @@ export default function Homepage() {
               <div className="categorycontent">
                 {category.description}
               </div>
-              <button className="categorybutton">
-                Check out the threads in this category!
-              </button>
+              <Link to = {`/${category.id}`}>
+                <button className="categorybutton">
+                  Check out the threads in this category!
+                </button>
+              </Link>
             </div>
           ))}
         </div>

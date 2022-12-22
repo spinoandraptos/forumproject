@@ -60,7 +60,7 @@ func UserAuthentication(w http.ResponseWriter, r *http.Request) {
 	if human.Password == humanTest.Password {
 		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Logged In Successfully!", "jwt": "12323432"})
 	} else {
-		helper.RespondwithERROR(w, http.StatusBadRequest, "Login Failed, Please Check Password is Correct :(")
+		helper.RespondwithERROR(w, http.StatusUnauthorized, "Login Failed, Please Check Password is Correct :(")
 	}
 
 	w.Write([]byte("HELLO!"))

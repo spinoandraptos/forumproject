@@ -6,7 +6,6 @@ import "time"
 type Comment struct {
 	ID        string `json:"id"`
 	Content   string `json:"content"`
-	Author    User   `json:"author"`
 	AuthorID  uint32 `json:"authorid"`
 	ThreadID  uint32 `json:"threadid"`
 	CreatedAt time.Time

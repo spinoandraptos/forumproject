@@ -1,27 +1,37 @@
 //this is the entry point for the react app
-//this file renders app
+//this file sets out all the possible routes within the document
+//first we wrap the entire app within a router to handle routing via Link
+//
 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Homepage from './components/HomepageLayout';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import Loginpage from "./components/LoginpageLayout";
-import Registerpage from "./components/RegisterpageLayout";
+import Homepage from './components/Homepage';
+import Loginpage from './components/Loginpage';
+import Registerpage from './components/Registerpage'
+import Threadspage from './components/Threadspage';
+import Threadpage from './components/Threadpage';
 
+export default function Forum() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/users/login" element={<Loginpage />} />
+        <Route path="/users/signup" element={<Registerpage />} />
+        <Route path="/:id" element={<Threadspage />} />
+        <Route path="/:d/threads/:id" element={<Threadpage />} />
+      </Routes>
+    </Router>
+  );
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Homepage>
-        <Routes>
-          <Route exact path="/login" element={<Loginpage />} />
-          <Route exact path="/register" element={<Registerpage />} />
-        </Routes>
-      </Homepage>
-    </BrowserRouter>
+    <Forum />
   </React.StrictMode>
 );
 

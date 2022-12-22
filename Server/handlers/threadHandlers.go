@@ -14,19 +14,25 @@ import (
 
 func ViewThreads(w http.ResponseWriter, r *http.Request) {
 
+	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
+	if err != nil {
+		helper.Catch(err)
+	}
 	var allthreads []models.Thread
-	threads, err := database.DB.Query("SELECT * FROM threads ORDER BY CreatedAt DESC")
+	threads, err := database.DB.Query("SELECT * FROM threads WHERE CategoryID = $1 ORDER BY CreatedAt DESC", categoryid)
 	if err != nil {
 		helper.Catch(err)
 	}
 	for threads.Next() {
 		var post models.Thread
-		err = threads.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt)
+		err = threads.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.UpdatedAt)
 		if err != nil {
 			helper.Catch(err)
 		}
 		allthreads = append(allthreads, post)
 	}
+	threads.Close()
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(allthreads)
 }

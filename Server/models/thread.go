@@ -12,11 +12,10 @@ type Thread struct {
 	ID         uint32 `json:"id"`
 	Title      string `json:"title"`
 	Content    string `json:"content"`
-	Author     User   `json:"author"`
 	AuthorID   uint32 `json:"authorid"`
 	CategoryID uint32 `json:"categoryid"`
 	CreatedAt  time.Time
-	ModifiedAt time.Time
+	UpdatedAt  time.Time
 }
 
 // to retrieve all created threads from the database
@@ -31,7 +30,7 @@ func RetrieveAllThreads() (threadSlice []Thread, err error) {
 	}
 	for posts.Next() {
 		var thread Thread
-		err = posts.Scan(&thread.ID, &thread.Title, &thread.Content, &thread.AuthorID, &thread.CategoryID, &thread.CreatedAt)
+		err = posts.Scan(&thread.ID, &thread.Title, &thread.Content, &thread.AuthorID, &thread.CategoryID, &thread.CreatedAt, &thread.UpdatedAt)
 		if err != nil {
 			log.Println(err)
 			panic(err)

@@ -76,10 +76,15 @@
     color: #063970;
     font-size: calc(5px + 0.6vmax);
     border-color: #063970;
+    cursor: pointer;
 }
 
 .categorybutton:hover {
     color: ghostwhite;
     background-color: #4e82b8;
     border-color: ghostwhite;
+}
+
+.loginpage {
+    background-color: ghostwhite;
 }

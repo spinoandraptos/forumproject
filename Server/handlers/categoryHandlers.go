@@ -21,9 +21,9 @@ func ViewCategory(w http.ResponseWriter, r *http.Request) {
 	response := database.DB.QueryRow("SELECT * FROM categories WHERE ID = $1", categoryid)
 	err = response.Scan(&category.ID, &category.Title, &category.Description)
 	helper.Catch(err)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(category)
-
 }
 
 func ViewCategories(w http.ResponseWriter, r *http.Request) {
