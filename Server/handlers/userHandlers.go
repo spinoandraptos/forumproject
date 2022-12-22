@@ -83,7 +83,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var human models.User
 	json.NewDecoder(r.Body).Decode(&human)
 
-	response, err := database.DB.Exec("INSERT INTO users (ID, Username, Password, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5)", &human.ID, &human.Username, &human.Password, time.Now(), time.Now())
+	response, err := database.DB.Exec("INSERT INTO users (Username, Password, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4)", &human.Username, &human.Password, time.Now(), time.Now())
 	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()

@@ -13,6 +13,8 @@ import Loginpage from './components/Loginpage';
 import Registerpage from './components/Registerpage'
 import Threadspage from './components/Threadspage';
 import Threadpage from './components/Threadpage';
+import Createthread from './components/Createthreadpage';
+import Createcomment from './components/Postcommentpage';
 
 export default function Forum() {
   return (
@@ -22,7 +24,9 @@ export default function Forum() {
         <Route path="/users/login" element={<Loginpage />} />
         <Route path="/users/signup" element={<Registerpage />} />
         <Route path="/:id" element={<Threadspage />} />
-        <Route path="/:d/threads/:id" element={<Threadpage />} />
+        <Route path="/:id/threads/:id" element={<Threadpage />} />
+        <Route path="/:id/threads/create" element={<Createthread />} />
+        <Route path="/:id/threads/:id/comments/create" element={<Createcomment />} />
       </Routes>
     </Router>
   );

@@ -19,13 +19,13 @@ func ViewThreads(w http.ResponseWriter, r *http.Request) {
 		helper.Catch(err)
 	}
 	var allthreads []models.Thread
-	threads, err := database.DB.Query("SELECT * FROM threads WHERE CategoryID = $1 ORDER BY CreatedAt DESC", categoryid)
+	threads, err := database.DB.Query("SELECT threads.*, users.Username FROM threads INNER JOIN users ON threads.AuthorID=users.ID WHERE CategoryID = $1 ORDER BY CreatedAt DESC", categoryid)
 	if err != nil {
 		helper.Catch(err)
 	}
 	for threads.Next() {
 		var post models.Thread
-		err = threads.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.UpdatedAt)
+		err = threads.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.UpdatedAt, &post.Authorusername)
 		if err != nil {
 			helper.Catch(err)
 		}
@@ -49,7 +49,7 @@ func ViewThread(w http.ResponseWriter, r *http.Request) {
 	}
 	var post models.Thread
 	response := database.DB.QueryRow("SELECT * FROM threads WHERE ID = $1 AND CategoryID = $2", threadid, categoryid)
-	err = response.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt)
+	err = response.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.Authorusername, &post.CategoryID, &post.CreatedAt)
 	helper.Catch(err)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)

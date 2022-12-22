@@ -14,10 +14,6 @@ export default function Loginpage() {
       setPassword(input.target.value);
     };
 
-    function showdata(){
-      alert(username + password);
-    }
-
     function postdata(input){
       input.preventDefault();
       fetch(`http://localhost:3000/users/login/authenticate`, {
@@ -42,44 +38,56 @@ export default function Loginpage() {
     
 
     return (
-      <div className="loginpage">
+      <div>
         <div className="herocontent">
           <div className="herotext">
             Bop Fish Nation 
           </div>
         </div>
-        <h1>Login Page</h1>
-        <form onSubmit={postdata}>
-          <div className="loginbox">
-            <label htmlFor="username">
-              Username
-            </label>
-            <br />
-            <input id="username" type="text" value={username} onChange={handleUsername} />
+        <div className="loginpage">
+          <div className="logintitle">
+            Login Page
           </div>
-          <div className="loginbox">
-            <label htmlFor="password">
-              Password
-            </label>
-            <br />
-            <input id="password" type="password" value={password} onChange={handlePassword}/>
+          <div className="loginformwhole">
+            <div  className="loginform">
+            <form onSubmit={postdata} className="form">
+              <div className="loginlabel">
+                <label htmlFor="username">
+                  Username:
+                </label>
+                <br />
+                <label htmlFor="password">
+                  Password:
+                </label>
+              </div>
+              <div className="loginbox">
+                <input id="username" type="text" value={username} onChange={handleUsername} />
+                <br />
+                <input id="password" type="password" value={password} onChange={handlePassword}/>
+                <br />
+                <button className="formsubmitbutton">
+                  Submit
+                </button>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+        <div className="bottomlink">
+          <div className="signup">
+            Don't have an account?
+            <br/>
+            <Link to = "/users/signup">
+              Sign Up Here!
+            </Link>
           </div>
           <br />
-          <button className="formsubmitbutton">
-            Submit
-          </button>
-        </form>
-        <div className="signup">
-          Don't have an account?
-          <Link to = "/users/signup">
-            Sign Up!
+          <Link to = "/">
+            <button className="footerbutton">
+              Back to Homepage
+            </button>
           </Link>
         </div>
-        <Link to = "/">
-          <button className="footerbutton">
-            Back to Homepage
-          </button>
-        </Link>
       </div>
     )
 }

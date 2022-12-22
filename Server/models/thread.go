@@ -9,13 +9,14 @@ import (
 
 // a forum thread has an unique ID, title, content, category ID, author, author's ID and records the time of its creation or update
 type Thread struct {
-	ID         uint32 `json:"id"`
-	Title      string `json:"title"`
-	Content    string `json:"content"`
-	AuthorID   uint32 `json:"authorid"`
-	CategoryID uint32 `json:"categoryid"`
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID             uint32 `json:"id"`
+	Title          string `json:"title"`
+	Content        string `json:"content"`
+	AuthorID       uint32 `json:"authorid"`
+	Authorusername string `json:"authorusername"`
+	CategoryID     uint32 `json:"categoryid"`
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }
 
 // to retrieve all created threads from the database

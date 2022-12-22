@@ -10,35 +10,21 @@ export default function Threadspage() {
     console.log(id);
 
     useEffect(() => {
+      Promise.all([
         fetch(`http://localhost:3000/${id}`, {
             method: "GET"
-        })
-        .then((response) => {
-        if (response.ok) {
-            console.log("Response:" + response)
-            return response.json();
-        }
-        throw new Error("Fetch Error");
-        })
-        .then((categorydata) => {
-            console.log("Data1:" + categorydata)
-            setCategory(categorydata);
-            console.log("Final1:" + JSON.stringify(category))
-        });
-    }, []);
-
-    useEffect(() => {
+        }),
         fetch(`http://localhost:3000/${id}/threads`, {
             method: "GET"
         })
-        .then((response) => {
-        if (response.ok) {
-            console.log("Response:" + response)
-            return response.json();
-        }
-        throw new Error("Fetch Error");
-        })
-        .then((threadsdata) => {
+      ])
+        .then(([categoryresponse, threadsresponse]) => 
+        Promise.all([categoryresponse.json(), threadsresponse.json()])
+        )
+        .then(([categorydata, threadsdata]) => {
+            console.log("Data1:" + categorydata)
+            setCategory(categorydata);
+            console.log("Final1:" + JSON.stringify(category))
             console.log("Data2:" + threadsdata)
             setThreads(threadsdata);
             console.log("Final2:" + JSON.stringify(threads))
@@ -46,7 +32,7 @@ export default function Threadspage() {
     }, []);
 
     return (
-        <div className = "allcategories">
+        <div className = "allthreads">
         <div className="herocontent">
           <div className="herotext">
             Bop Fish Nation 
@@ -54,18 +40,21 @@ export default function Threadspage() {
         </div>
         <header id = "homepageheader">
           <div className = "headerlinks">
-            <Link to = "/users/signup">
+            <Link to = {`/${category.id}/threads/create`}>
               <button className="headerbutton">
-                Register
-              </button>
-            </Link>
-            <Link to = "/users/login">
-              <button className="headerbutton">
-                Login
+                Post A Thread
               </button>
             </Link>
           </div>
         </header>
+        <div className="threadcategory">
+          <div className="threadcategorytitle">
+            {category.title}
+          </div>
+          <div className="threadcategorydescription">
+            {category.description}
+          </div>
+        </div>
         {threads?.map(thread => (
             <div className="threads">
                 <div className="thread" key={thread.id}>
@@ -76,34 +65,25 @@ export default function Threadspage() {
                         {thread.content}
                     </div>
                     <div className="threadfooter">
-                        Posted by {thread.authorid}
+                      <div>
+                        Posted by {thread.authorusername}
+                      </div>
+                      <div className="threadfooterbutton">
+                        <Link to = {`/${category.id}/threads/${thread.id}`}>
+                          <button className="footerbutton threadbutton2">
+                            Reply to this Thread
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                 </div>
             </div>
         ))}
         <Link to = "/">
-              <button className="footerbutton">
+              <button className="footerbutton threadbutton">
                 Back to Homepage
               </button>
             </Link>
      </div>
     )
 }
-
-/*
-fetch(`http://localhost:3000/${id}`, {
-            method: "GET"
-        })
-        .then((response) => {
-        if (response.ok) {
-            console.log("Response:" + response)
-            return response.json();
-        }
-        throw new Error("Fetch Error");
-        })
-        .then((categorydata) => {
-            console.log("Data1:" + categorydata)
-            setCategory(categorydata);
-            console.log("Final1:" + JSON.stringify(category))
-        });
-*/
