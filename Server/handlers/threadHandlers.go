@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth/v5"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/helper"
 	"github.com/spinoandraptos/forumproject/Server/models"
@@ -58,19 +59,26 @@ func ViewThread(w http.ResponseWriter, r *http.Request) {
 
 func CreateThread(w http.ResponseWriter, r *http.Request) {
 
-	var post models.Thread
-	json.NewDecoder(r.Body).Decode(&post)
-
-	response, err := database.DB.Exec("INSERT INTO threads (ID, Title, Content, AuthorID, CategoryID, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5, $6)", &post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, time.Now(), time.Now())
-	helper.Catch(err)
-
-	rowsAffected, err := response.RowsAffected()
-	helper.Catch(err)
-
-	if rowsAffected == 0 {
-		helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Creation Failed :(")
+	token, _, _ := jwtauth.FromContext(r.Context())
+	if token == nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
 	} else {
-		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Created Successfully!"})
+
+		var post models.Thread
+		json.NewDecoder(r.Body).Decode(&post)
+
+		response, err := database.DB.Exec("INSERT INTO threads (ID, Title, Content, AuthorID, CategoryID, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5, $6)", &post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, time.Now(), time.Now())
+		helper.Catch(err)
+
+		rowsAffected, err := response.RowsAffected()
+		helper.Catch(err)
+
+		if rowsAffected == 0 {
+			helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Creation Failed :(")
+		} else {
+			helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Created Successfully!"})
+		}
 	}
 }
 

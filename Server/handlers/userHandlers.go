@@ -58,7 +58,10 @@ func UserAuthentication(w http.ResponseWriter, r *http.Request) {
 		helper.RespondwithERROR(w, http.StatusBadRequest, "Unable to Find User :(")
 	}
 	if human.Password == humanTest.Password {
-		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Logged In Successfully!", "jwt": "12323432"})
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Logged In Successfully!"})
+		token := models.createtoken(human.Username, human.Password)
+		http.SetCookie(w, &http.Cookie{HttpOnly: true, Expires: time.Now().Add(1 * time.Hour), Name: "jwt", Value: token})
+
 	} else {
 		helper.RespondwithERROR(w, http.StatusUnauthorized, "Login Failed, Please Check Password is Correct :(")
 	}
@@ -68,6 +71,7 @@ func UserAuthentication(w http.ResponseWriter, r *http.Request) {
 
 func UserLogout(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("HELLO!"))
+	http.SetCookie(w, &http.Cookie{HttpOnly: true, MaxAge: -1, Name: "jwt", Value: ""})
 }
 
 /*

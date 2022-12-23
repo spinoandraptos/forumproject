@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/go-chi/jwtauth"
 )
 
 // define a function that helper.Catches errors by printing error message and panicks to stop execution
@@ -32,4 +34,12 @@ func RespondwithERROR(w http.ResponseWriter, statusCode int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	w.Write(response)
+}
+
+func unathenticatedresponse(w http.ResponseWriter, r *http.Request) {
+	token, _, _ := jwtauth.FromContext(r.Context())
+	if token == nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+	}
 }

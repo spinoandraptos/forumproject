@@ -25,18 +25,24 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/go-chi/jwtauth/v5"
 	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/handlers"
 	"github.com/spinoandraptos/forumproject/Server/helper"
 )
 
-// define the init function which connects to the postgresql database
-// this will be run before main() as database package will be imported into main package
+var authtoken *jwtauth.JWTAuth
+
+const secretkey = "123abc"
+
+// define the init function which connects to the postgresql database and creates authtoken as a pointer to a JWT
+// this will be run before main() as database package and authtoken will be imported into main package
 // then we define DB to point specifically to the forum database (specified by the info in psqlInfo which is sent to sql.Open)
 // db.Ping will then attempt to open a connection with the database
 // if error occurs, error message will be printed
 func init() {
+	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", database.Host, database.Port, database.User, database.Password, database.Dbname)
 	database.DB, err = sql.Open("postgres", psqlInfo)
@@ -76,19 +82,31 @@ func main() {
 	}))
 
 	//Register endpoints (GET, POST, PUT, DELETE) with their respective paths
-	//routes are grouped under 3 branches: one standalone for entry page, one for users and one for categories
+	//routes are grouped under 3 branches: one for routes that can only be accessed by authenticated users
+	//one for branches under users and one for branches under categories
 	//route handler functions are defined under the respective handler files
 	//it is to be noted that the handlers below are merely functions and do not implement the Handler interface
 	//this is because using merely functions is clearer and simpler given we are not doing complex operations
+	router.Group(func(needauthrouter chi.Router) {
+		needauthrouter.Use(jwtauth.Verifier(authtoken))
+		needauthrouter.Use(jwtauth.Authenticator)
+		needauthrouter.Route("/", func(r chi.Router) {
+			r.Post("/users/logout", handlers.UserLogout)
+			r.Get("/users/{userid}", handlers.ViewUser)
+			r.Put("/users/{userid}", handlers.UpdateUser)
+			r.Delete("/users/{userid}", handlers.DeleteUser)
+			r.Post("/{categoryid}/threads", handlers.CreateThread)
+			r.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
+			r.Put("/{categoryid}/threads/{threadid}", handlers.UpdateThread)
+			r.Put("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.UpdateComment)
+			r.Delete("/{categoryid}/threads/{threadid}", handlers.DeleteThread)
+			r.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
+		})
+	})
 
 	router.Route("/users", func(r chi.Router) {
 		r.Post("/login", handlers.UserLogin)
-		r.Post("/login/authenticate", handlers.UserAuthentication)
-		r.Post("/{userid}/logout", handlers.UserLogout)
-		r.Get("/{userid}", handlers.ViewUser)
 		r.Post("/signup", handlers.CreateUser)
-		r.Put("/{userid}", handlers.UpdateUser)
-		r.Delete("/{userid}", handlers.DeleteUser)
 	})
 
 	router.Route("/", func(r chi.Router) {
@@ -98,15 +116,6 @@ func main() {
 		r.Get("/{categoryid}/threads/{threadid}", handlers.ViewThread)
 		r.Get("/{categoryid}/threads/{threadid}/comments", handlers.ViewComments)
 		r.Get("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
-
-		router.Post("/{categoryid}/threads", handlers.CreateThread)
-		router.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
-
-		router.Put("/{categoryid}/threads/{threadid}", handlers.UpdateThread)
-		router.Put("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.UpdateComment)
-
-		router.Delete("/{categoryid}/threads/{threadid}", handlers.DeleteThread)
-		router.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
 	})
 
 	//use router to start the server
