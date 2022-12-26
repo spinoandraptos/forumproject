@@ -4,7 +4,7 @@ import (
 	"github.com/go-chi/jwtauth"
 )
 
-func createtoken(username string, password string) string {
+func Createtoken(username string, password string) string {
 	var authtoken *jwtauth.JWTAuth
 	const secretkey = "123abc"
 	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)

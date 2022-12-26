@@ -32,7 +32,7 @@ import (
 	"github.com/spinoandraptos/forumproject/Server/helper"
 )
 
-var authtoken *jwtauth.JWTAuth
+var Authtoken *jwtauth.JWTAuth
 
 const secretkey = "123abc"
 
@@ -42,7 +42,7 @@ const secretkey = "123abc"
 // db.Ping will then attempt to open a connection with the database
 // if error occurs, error message will be printed
 func init() {
-	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
+	Authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", database.Host, database.Port, database.User, database.Password, database.Dbname)
 	database.DB, err = sql.Open("postgres", psqlInfo)
@@ -87,28 +87,6 @@ func main() {
 	//route handler functions are defined under the respective handler files
 	//it is to be noted that the handlers below are merely functions and do not implement the Handler interface
 	//this is because using merely functions is clearer and simpler given we are not doing complex operations
-	router.Group(func(needauthrouter chi.Router) {
-		needauthrouter.Use(jwtauth.Verifier(authtoken))
-		needauthrouter.Use(jwtauth.Authenticator)
-		needauthrouter.Route("/", func(r chi.Router) {
-			r.Post("/users/logout", handlers.UserLogout)
-			r.Get("/users/{userid}", handlers.ViewUser)
-			r.Put("/users/{userid}", handlers.UpdateUser)
-			r.Delete("/users/{userid}", handlers.DeleteUser)
-			r.Post("/{categoryid}/threads", handlers.CreateThread)
-			r.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
-			r.Put("/{categoryid}/threads/{threadid}", handlers.UpdateThread)
-			r.Put("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.UpdateComment)
-			r.Delete("/{categoryid}/threads/{threadid}", handlers.DeleteThread)
-			r.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
-		})
-	})
-
-	router.Route("/users", func(r chi.Router) {
-		r.Post("/login", handlers.UserLogin)
-		r.Post("/signup", handlers.CreateUser)
-	})
-
 	router.Route("/", func(r chi.Router) {
 		r.Get("/", handlers.ViewCategories)
 		r.Get("/{categoryid}", handlers.ViewCategory)
@@ -116,6 +94,21 @@ func main() {
 		r.Get("/{categoryid}/threads/{threadid}", handlers.ViewThread)
 		r.Get("/{categoryid}/threads/{threadid}/comments", handlers.ViewComments)
 		r.Get("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
+		r.Post("/{categoryid}/threads", handlers.CreateThread)
+		r.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
+		r.Put("/{categoryid}/threads/{threadid}", handlers.UpdateThread)
+		r.Put("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.UpdateComment)
+		r.Delete("/{categoryid}/threads/{threadid}", handlers.DeleteThread)
+		r.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
+	})
+
+	router.Route("/users", func(r chi.Router) {
+		r.Post("/login", handlers.UserLogin)
+		r.Post("/signup", handlers.CreateUser)
+		r.Get("/{userid}", handlers.ViewUser)
+		r.Post("/logout", handlers.UserLogout)
+		r.Put("/{userid}", handlers.UpdateUser)
+		r.Delete("/{userid}", handlers.DeleteUser)
 	})
 
 	//use router to start the server

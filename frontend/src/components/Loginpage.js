@@ -17,7 +17,7 @@ export default function Loginpage() {
 
     function postdata(input){
       input.preventDefault();
-      fetch(`http://localhost:3000/users/login/authenticate`, {
+      fetch(`http://localhost:3000/users/login`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -32,7 +32,7 @@ export default function Loginpage() {
             navigate("/")
         } else if (response.status === 400) {
           alert("Username not Found")
-        } else if (response.status === 401) {
+        } else if (response.status === 403) {
           alert("Incorrect Password")
         }
       })

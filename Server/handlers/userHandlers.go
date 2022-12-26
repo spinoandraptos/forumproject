@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
-	"html/template"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/helper"
@@ -41,13 +41,10 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(human)
 }
 
+// the login function will take the juser info input of the request body and check if it matches the user data in the database
+// if there is a match, we create a session for the user for session-based authentication
+// after which we create a cookie with an unique UUID that will be stored in the browser and used for authentication
 func UserLogin(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles()
-	helper.Catch(err)
-	t.Execute(w, nil)
-}
-
-func UserAuthentication(w http.ResponseWriter, r *http.Request) {
 
 	var human models.User
 	var humanTest models.User
@@ -58,20 +55,49 @@ func UserAuthentication(w http.ResponseWriter, r *http.Request) {
 		helper.RespondwithERROR(w, http.StatusBadRequest, "Unable to Find User :(")
 	}
 	if human.Password == humanTest.Password {
-		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Logged In Successfully!"})
-		token := models.createtoken(human.Username, human.Password)
-		http.SetCookie(w, &http.Cookie{HttpOnly: true, Expires: time.Now().Add(1 * time.Hour), Name: "jwt", Value: token})
-
-	} else {
-		helper.RespondwithERROR(w, http.StatusUnauthorized, "Login Failed, Please Check Password is Correct :(")
+		sessionuuid := uuid.NewString()
+		response, err := database.DB.Exec("INSERT INTO sessions (Username, UUID, CreatedAt) VALUES ($1, $2)", human.Username, sessionuuid, time.Now())
+		helper.Catch(err)
+		rowsAffected, err := response.RowsAffected()
+		helper.Catch(err)
+		if rowsAffected == 0 {
+			helper.RespondwithERROR(w, http.StatusBadRequest, "Session Creation Failed :(")
+		} else {
+			cookie := http.Cookie{
+				Name:     "sessioncookie",
+				Value:    sessionuuid,
+				HttpOnly: true,
+			}
+			http.SetCookie(w, &cookie)
+			helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Cookie Created Successfully!"})
+		}
 	}
-
-	w.Write([]byte("HELLO!"))
 }
 
 func UserLogout(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("HELLO!"))
-	http.SetCookie(w, &http.Cookie{HttpOnly: true, MaxAge: -1, Name: "jwt", Value: ""})
+	tokencookie, err := r.Cookie("sessioncookie")
+	if err != nil {
+		helper.RespondwithERROR(w, http.StatusNotFound, "Error in finding jwt cookie")
+	} else {
+		cookievalue := tokencookie.Value
+		var activesession models.Session
+		response := database.DB.QueryRow("SELECT * FROM sessions WHERE UUID = $1", cookievalue)
+		err := response.Scan(&activesession.ID, &activesession.UUID, &activesession.Username, &activesession.CreatedAt)
+		if err != nil {
+			helper.RespondwithERROR(w, http.StatusBadRequest, "Failed to Verify User")
+		}
+		deletion, err := database.DB.Exec("DELETE * FROM sessions WHERE UUID = $1", cookievalue)
+		helper.Catch(err)
+
+		rowsAffected, err := deletion.RowsAffected()
+		helper.Catch(err)
+
+		if rowsAffected == 0 {
+			helper.RespondwithERROR(w, http.StatusBadRequest, "User Logout Failed :(")
+		} else {
+			helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "User Logged Out Successfully!"})
+		}
+	}
 }
 
 /*

@@ -15,6 +15,7 @@ import Threadspage from './components/Threadspage';
 import Threadpage from './components/Threadpage';
 import Createthread from './components/Createthreadpage';
 import Createcomment from './components/Postcommentpage';
+import Logoutpage from './components/Logoutpage';
 
 export default function Forum() {
   return (
@@ -22,6 +23,7 @@ export default function Forum() {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/users/login" element={<Loginpage />} />
+        <Route path="/users/logout" element={<Logoutpage />} />
         <Route path="/users/signup" element={<Registerpage />} />
         <Route path="/:id" element={<Threadspage />} />
         <Route path="/:id/threads/:id" element={<Threadpage />} />

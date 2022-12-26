@@ -13,7 +13,7 @@
 
 create table users (
   ID         serial primary key,
-  Username   varchar(255), 
+  Username   varchar(255) not null, 
   Password   varchar(255) not null,
   CreatedAt  timestamp not null,
   UpdatedAt  timestamp not null   

@@ -9,6 +9,7 @@ require (
 	github.com/go-chi/jwtauth v1.2.0 // indirect
 	github.com/go-chi/jwtauth/v5 v5.1.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.7 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.1 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
