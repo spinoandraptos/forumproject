@@ -18,6 +18,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,14 +26,15 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/go-chi/jwtauth/v5"
+	"github.com/go-chi/jwtauth"
 	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/handlers"
 	"github.com/spinoandraptos/forumproject/Server/helper"
+	"github.com/spinoandraptos/forumproject/Server/models"
 )
 
-var Authtoken *jwtauth.JWTAuth
+var authtoken *jwtauth.JWTAuth
 
 const secretkey = "123abc"
 
@@ -42,7 +44,7 @@ const secretkey = "123abc"
 // db.Ping will then attempt to open a connection with the database
 // if error occurs, error message will be printed
 func init() {
-	Authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
+	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", database.Host, database.Port, database.User, database.Password, database.Dbname)
 	database.DB, err = sql.Open("postgres", psqlInfo)
@@ -73,27 +75,39 @@ func main() {
 	//using the cors middleware to perform preflight CORS checks on the server side
 	//this ensures that the server only permits browser requests fulfilling the below requirements which reduces potential misuse
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowedOrigins:   []string{"http://localhost:3001"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"Set-Cookie", "Content-Type", "Authorisation", "Accept", "X-CSRF-Token", "Cookie"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
 	//Register endpoints (GET, POST, PUT, DELETE) with their respective paths
-	//routes are grouped under 3 branches: one for routes that can only be accessed by authenticated users
-	//one for branches under users and one for branches under categories
+	//routes are grouped under 2 branches: one for routes that can only be accessed by authenticated users
+	//and one for public (unauthenticated) users
 	//route handler functions are defined under the respective handler files
 	//it is to be noted that the handlers below are merely functions and do not implement the Handler interface
 	//this is because using merely functions is clearer and simpler given we are not doing complex operations
-	router.Route("/", func(r chi.Router) {
+
+	router.Group(func(r chi.Router) {
+		r.Post("/users/login", UserLogin)
+		r.Post("/users/signup", handlers.CreateUser)
 		r.Get("/", handlers.ViewCategories)
 		r.Get("/{categoryid}", handlers.ViewCategory)
 		r.Get("/{categoryid}/threads", handlers.ViewThreads)
 		r.Get("/{categoryid}/threads/{threadid}", handlers.ViewThread)
 		r.Get("/{categoryid}/threads/{threadid}/comments", handlers.ViewComments)
 		r.Get("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
+	})
+
+	router.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(authtoken))
+		r.Use(jwtauth.Authenticator)
+		r.Get("/users/{userid}", handlers.ViewUser)
+		r.Post("/users/logout", UserLogout)
+		r.Put("/users/{userid}", handlers.UpdateUser)
+		r.Delete("/users/{userid}", handlers.DeleteUser)
 		r.Post("/{categoryid}/threads", handlers.CreateThread)
 		r.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
 		r.Put("/{categoryid}/threads/{threadid}", handlers.UpdateThread)
@@ -102,17 +116,48 @@ func main() {
 		r.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
 	})
 
-	router.Route("/users", func(r chi.Router) {
-		r.Post("/login", handlers.UserLogin)
-		r.Post("/signup", handlers.CreateUser)
-		r.Get("/{userid}", handlers.ViewUser)
-		r.Post("/logout", handlers.UserLogout)
-		r.Put("/{userid}", handlers.UpdateUser)
-		r.Delete("/{userid}", handlers.DeleteUser)
-	})
-
 	//use router to start the server
 	//if there is error starting server (error value is not nil), error message is printed
 	err := http.ListenAndServe(":3000", router)
 	helper.Catch(err)
+}
+
+func UserLogin(w http.ResponseWriter, r *http.Request) {
+
+	var human models.User
+	var humanTest models.User
+	json.NewDecoder(r.Body).Decode(&human)
+	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1", human.Username)
+	err := response.Scan(&humanTest.ID, &humanTest.Username, &humanTest.Password, &humanTest.CreatedAt, &humanTest.UpdatedAt)
+	{
+		helper.Catch(err)
+	}
+	if human.Password == humanTest.Password {
+		_, payloadclaims, _ := authtoken.Encode(map[string]interface{}{"username": &human.Username, "password": &human.Password})
+		fmt.Printf("DEBUG: a sample jwt is %s\n\n", payloadclaims)
+		http.SetCookie(w, &http.Cookie{
+			HttpOnly: true,
+			SameSite: http.SameSiteNoneMode,
+			Secure:   true,
+			Name:     "jwt", // Must be named "jwt" or else the token cannot be searched for by jwtauth.Verifier.
+			Value:    payloadclaims,
+		})
+		decodedclaims, err := authtoken.Decode(payloadclaims)
+		fmt.Printf("DEBUG: a sample jwt is %s\n\n", decodedclaims)
+		helper.Catch(err)
+	} else {
+		w.WriteHeader(404)
+	}
+}
+
+func UserLogout(w http.ResponseWriter, r *http.Request) {
+
+	http.SetCookie(w, &http.Cookie{
+		HttpOnly: true,
+		MaxAge:   -1, // Delete the cookie.
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
+		Name:     "jwt",
+		Value:    "",
+	})
 }

@@ -11,10 +11,10 @@ export default function Threadspage() {
 
     useEffect(() => {
       Promise.all([
-        fetch(`http://localhost:3000/${id}`, {
+        fetch(`http://localhost:8000/${id}`, {
             method: "GET"
         }),
-        fetch(`http://localhost:3000/${id}/threads`, {
+        fetch(`http://localhost:8000/${id}/threads`, {
             method: "GET"
         })
       ])

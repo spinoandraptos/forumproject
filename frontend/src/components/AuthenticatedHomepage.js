@@ -10,7 +10,7 @@ import "./Userpage"
 //then using the useEffect hook, fetch category data from API and update the state to contain the data
 //finally, render the data to be a visible format and output it to client
 
-export default function Homepage() {
+export default function AHomepage() {
 
     const [categories, setCategories] = useState([]);
 
@@ -20,15 +20,12 @@ export default function Homepage() {
         })
         .then((response) => {
         if (response.ok) {
-            console.log("Response:" + response)
             return response.json();
         }
         throw new Error("Fetch Error");
         })
         .then((categorydata) => {
-            console.log("Data:" + categorydata)
             setCategories(categorydata);
-            console.log("Final:" + JSON.stringify(categories))
         });
     }, []);
 
@@ -41,14 +38,9 @@ export default function Homepage() {
           </div>
           <header id = "homepageheader">
             <div className = "headerlinks">
-              <Link to = "/users/signup">
+              <Link to = "/users/logout">
                 <button className="headerbutton">
-                  Register
-                </button>
-              </Link>
-              <Link to = "/users/login">
-                <button className="headerbutton">
-                  Login
+                  Logout
                 </button>
               </Link>
             </div>

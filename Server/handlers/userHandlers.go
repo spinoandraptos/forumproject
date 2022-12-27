@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/google/uuid"
 	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/helper"
@@ -51,33 +50,28 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&human)
 	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1", human.Username)
 	err := response.Scan(&humanTest.ID, &humanTest.Username, &humanTest.Password, &humanTest.CreatedAt, &humanTest.UpdatedAt)
-	if err != nil {
-		helper.RespondwithERROR(w, http.StatusBadRequest, "Unable to Find User :(")
+	{
+		helper.Catch(err)
 	}
 	if human.Password == humanTest.Password {
-		sessionuuid := uuid.NewString()
-		response, err := database.DB.Exec("INSERT INTO sessions (Username, UUID, CreatedAt) VALUES ($1, $2)", human.Username, sessionuuid, time.Now())
-		helper.Catch(err)
-		rowsAffected, err := response.RowsAffected()
-		helper.Catch(err)
-		if rowsAffected == 0 {
-			helper.RespondwithERROR(w, http.StatusBadRequest, "Session Creation Failed :(")
-		} else {
-			cookie := http.Cookie{
-				Name:     "sessioncookie",
-				Value:    sessionuuid,
-				HttpOnly: true,
-			}
-			http.SetCookie(w, &cookie)
-			helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Cookie Created Successfully!"})
-		}
+		jwttoken := models.Createtoken(&human.Username, &human.Password)
+		http.SetCookie(w, &http.Cookie{
+			HttpOnly: true,
+			Expires:  time.Now().Add(1 * time.Hour),
+			SameSite: http.SameSiteNoneMode,
+			Secure:   true,
+			Name:     "jwt", // Must be named "jwt" or else the token cannot be searched for by jwtauth.Verifier.
+			Value:    jwttoken,
+		})
+	} else {
+		w.WriteHeader(404)
 	}
 }
 
 func UserLogout(w http.ResponseWriter, r *http.Request) {
-	tokencookie, err := r.Cookie("sessioncookie")
+	tokencookie, err := r.Cookie("jwt")
 	if err != nil {
-		helper.RespondwithERROR(w, http.StatusNotFound, "Error in finding jwt cookie")
+		helper.Catch(err)
 	} else {
 		cookievalue := tokencookie.Value
 		var activesession models.Session
@@ -186,3 +180,23 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "User Deleted Successfully!"})
 	}
 }
+
+/*
+sessionuuid := uuid.NewString()
+		fmt.Println(sessionuuid)
+		response, err := database.DB.Exec("INSERT INTO sessions (Username, UUID, CreatedAt) VALUES ($1, $2, $3)", human.Username, sessionuuid, time.Now())
+		if err != nil {
+			w.WriteHeader(401)
+		}
+		rowsAffected, _ := response.RowsAffected()
+		if rowsAffected != 0 {
+			cookie := http.Cookie{
+				Name:     "sessioncookie",
+				Value:    sessionuuid,
+				HttpOnly: true,
+				SameSite: http.SameSiteNoneMode,
+				Secure:   true,
+			}
+			http.SetCookie(w, &cookie)
+			fmt.Println(cookie)
+*/

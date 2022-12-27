@@ -20,20 +20,25 @@ export default function Loginpage() {
       fetch(`http://localhost:3000/users/login`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
+        credentials: "include",
         body: JSON.stringify({
           username: username,
           password: password
         })
       })
       .then((response) => {
-        if (response.ok) {
-            console.log("Response:" + response)
+        if (response.status===200) {
+            console.log("Response:" + JSON.stringify(response))
             alert("Login Successful!")
-            navigate("/")
-        } else if (response.status === 400) {
+            navigate("/authenticated")
+        } else if (response.status === 500) {
           alert("Username not Found")
-        } else if (response.status === 403) {
+        } else if (response.status === 404) {
           alert("Incorrect Password")
+        } else if (response.status === 401) {
+          alert("Already Logged In")
+        } else {
+          alert("Error")
         }
       })
     }

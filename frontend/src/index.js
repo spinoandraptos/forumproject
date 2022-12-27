@@ -8,7 +8,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Homepage from './components/Homepage';
+import NHomepage from './components/UnauthenticatedHomepage';
+import AHomepage from './components/AuthenticatedHomepage';
 import Loginpage from './components/Loginpage';
 import Registerpage from './components/Registerpage'
 import Threadspage from './components/Threadspage';
@@ -21,7 +22,8 @@ export default function Forum() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<NHomepage />} />
+        <Route path="/authenticated" element={<AHomepage />} />
         <Route path="/users/login" element={<Loginpage />} />
         <Route path="/users/logout" element={<Logoutpage />} />
         <Route path="/users/signup" element={<Registerpage />} />
