@@ -6,15 +6,15 @@ export default function Threadspage() {
 
     const [category, setCategory] = useState([]);
     const [threads, setThreads] = useState([]);
-    const {id} = useParams();
-    console.log(id);
+    const {categoryid} = useParams();
+    console.log(categoryid);
 
     useEffect(() => {
       Promise.all([
-        fetch(`http://localhost:8000/${id}`, {
+        fetch(`http://localhost:3000/${categoryid}`, {
             method: "GET"
         }),
-        fetch(`http://localhost:8000/${id}/threads`, {
+        fetch(`http://localhost:3000/${categoryid}/threads`, {
             method: "GET"
         })
       ])

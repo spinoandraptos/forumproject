@@ -104,7 +104,7 @@ func main() {
 	router.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(authtoken))
 		r.Use(jwtauth.Authenticator)
-		r.Get("/users/{userid}", handlers.ViewUser)
+		r.Post("/users/{username}", handlers.ViewUser)
 		r.Post("/users/logout", UserLogout)
 		r.Put("/users/{userid}", handlers.UpdateUser)
 		r.Delete("/users/{userid}", handlers.DeleteUser)

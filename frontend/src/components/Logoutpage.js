@@ -15,6 +15,7 @@ export default function Logooutpage() {
     .then((response) => {
       if (response.ok) {
           console.log("Response:" + response)
+          localStorage.removeItem("jwt");
           alert("Logout Successful!")
           navigate("/")
       } else {
@@ -30,16 +31,22 @@ export default function Logooutpage() {
               Bop Fish Nation 
             </div>
           </div>
-          <form onSubmit={postdata} className="form">
-                <button className="formsubmitbutton">
-                  Submit
+          <div className="logout">
+            <div className="logoutbox">
+              <form onSubmit={postdata} className="form">
+                <button className="formsubmitbuttonblue">
+                  Logout
                 </button>
-            </form>
+              </form>
+            </div>
+          </div>
+          <div className="logoutfooter">
             <Link to = "/authenticated">
-                <button className="headerbutton">
-                  Homepage
-                </button>
-              </Link>
+              <button className="footerbutton">
+                Return To Homepage
+              </button>
+            </Link>
+          </div>
         </div>
     )
 }

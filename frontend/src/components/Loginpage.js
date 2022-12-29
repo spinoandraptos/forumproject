@@ -28,7 +28,8 @@ export default function Loginpage() {
       })
       .then((response) => {
         if (response.status===200) {
-            console.log("Response:" + JSON.stringify(response))
+            console.log(response)
+            localStorage.setItem("jwt", JSON.stringify(username))
             alert("Login Successful!")
             navigate("/authenticated")
         } else if (response.status === 500) {
@@ -53,7 +54,7 @@ export default function Loginpage() {
         </div>
         <div className="loginpage">
           <div className="logintitle">
-            Login Page
+            Login Page 🔒
           </div>
           <div className="loginformwhole">
             <div  className="loginform">

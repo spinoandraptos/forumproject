@@ -8,6 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import { AuthContextProvider } from './components/Authenticate';
 import NHomepage from './components/UnauthenticatedHomepage';
 import AHomepage from './components/AuthenticatedHomepage';
 import Loginpage from './components/Loginpage';
@@ -18,8 +19,11 @@ import Createthread from './components/Createthreadpage';
 import Createcomment from './components/Postcommentpage';
 import Logoutpage from './components/Logoutpage';
 
+
+
 export default function Forum() {
   return (
+  <AuthContextProvider>
     <Router>
       <Routes>
         <Route path="/" element={<NHomepage />} />
@@ -27,12 +31,13 @@ export default function Forum() {
         <Route path="/users/login" element={<Loginpage />} />
         <Route path="/users/logout" element={<Logoutpage />} />
         <Route path="/users/signup" element={<Registerpage />} />
-        <Route path="/:id" element={<Threadspage />} />
-        <Route path="/:id/threads/:id" element={<Threadpage />} />
-        <Route path="/:id/threads/create" element={<Createthread />} />
-        <Route path="/:id/threads/:id/comments/create" element={<Createcomment />} />
+        <Route path="/:categoryid" element={<Threadspage />} />
+        <Route path="/:categoryid/threads/:threadid" element={<Threadpage />} />
+        <Route path="/:categoryid/threads/create" element={<Createthread />} />
+        <Route path="/:categoryid/threads/:threadid/comments/create" element={<Createcomment />} />
       </Routes>
     </Router>
+  </AuthContextProvider>
   );
 }
 

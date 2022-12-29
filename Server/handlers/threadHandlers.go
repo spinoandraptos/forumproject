@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -59,25 +58,19 @@ func ViewThread(w http.ResponseWriter, r *http.Request) {
 
 func CreateThread(w http.ResponseWriter, r *http.Request) {
 
-	tokencookie, err := r.Cookie("jwt")
-	if err != nil {
-		helper.RespondwithERROR(w, http.StatusNotFound, "Error in finding jwt cookie")
+	var post models.Thread
+	json.NewDecoder(r.Body).Decode(&post)
+
+	response, err := database.DB.Exec("INSERT INTO threads ( Title, Content, AuthorID, CategoryID, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5, $6)", &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, time.Now(), time.Now())
+	helper.Catch(err)
+
+	rowsAffected, err := response.RowsAffected()
+	helper.Catch(err)
+
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Creation Failed :(")
 	} else {
-		fmt.Println(tokencookie)
-		var post models.Thread
-		json.NewDecoder(r.Body).Decode(&post)
-
-		response, err := database.DB.Exec("INSERT INTO threads ( Title, Content, AuthorID, CategoryID, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5)", &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, time.Now(), time.Now())
-		helper.Catch(err)
-
-		rowsAffected, err := response.RowsAffected()
-		helper.Catch(err)
-
-		if rowsAffected == 0 {
-			helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Creation Failed :(")
-		} else {
-			helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Created Successfully!"})
-		}
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Created Successfully!"})
 	}
 }
 

@@ -28,16 +28,14 @@ import (
 
 func ViewUser(w http.ResponseWriter, r *http.Request) {
 
-	userid, err := strconv.Atoi(chi.URLParam(r, "userid"))
-	helper.Catch(err)
-
 	var human models.User
-	response := database.DB.QueryRow("SELECT * FROM users WHERE ID = $1", userid)
-	err = response.Scan(&human.ID, &human.Username, &human.Password, &human.CreatedAt, &human.UpdatedAt)
+	json.NewDecoder(r.Body).Decode(&human)
+	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1::varchar", human.Username)
+	err := response.Scan(&human.ID, &human.Username, &human.Password, &human.CreatedAt, &human.UpdatedAt)
 	helper.Catch(err)
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(human)
+	json.NewEncoder(w).Encode(human.ID)
 }
 
 // the login function will take the juser info input of the request body and check if it matches the user data in the database

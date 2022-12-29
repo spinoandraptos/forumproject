@@ -1,46 +1,61 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { AuthContext } from "./Authenticate";
 import { Link, useNavigate, useParams }  from "react-router-dom";
 import { useState } from "react";
 
+
 export default function Createthread() {
   
+  const navigate = useNavigate();
+  const {flag, userid, Fetchusername} = useContext(AuthContext)
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const navigate = useNavigate();
-  const {id} = useParams();
-
+  const {categoryid} = useParams();
   const handleTitle = (input) => {
     setTitle(input.target.value);
   };
-
   const handleContent = (input) => {
     setContent(input.target.value);
   };
+  
+  useEffect(() => 
+    Fetchusername(), 
+  [])
 
   function postdata(input){
     input.preventDefault();
-    fetch(`http://localhost:3000/${id}/threads`, {
+
+    if (flag == true) {
+  
+     fetch(`http://localhost:3000/${categoryid}/threads`, {
       method: "POST",
+      credentials: "include",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        title: title,
-        content: content
+        Title: title,
+        Content: content,
+        AuthorID: parseInt(userid),
+        CategoryID: parseInt(categoryid)
       })
     })
     .then((response) => {
       if (response.ok) {
           console.log("Response:" + response)
           alert("Thread Posted Successfully!")
-          navigate("/:id")
+          navigate(`/${categoryid}`)
       } else if (response.status===401) {
-        alert("Please Login First")
+        alert("Server Does Not Detect JWT")
       } else {
         alert("Error: Thread Cannot Posted")
       }
     })
+   } else {
+    alert("Please Login First")
+    navigate("/users/login")
+   }
   }
 
-    return(
+     return(
       <div>
       <div className="herocontent">
         <div className="herotext">
@@ -77,7 +92,7 @@ export default function Createthread() {
         </div>
       </div>
       <div className="bottomlink">
-        <Link to = {`/${id}`}>
+        <Link to = {`/${categoryid}`}>
           <button className="footerbutton">
             Back to Threads
           </button>

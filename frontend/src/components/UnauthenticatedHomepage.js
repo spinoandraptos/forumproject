@@ -16,7 +16,8 @@ export default function NHomepage() {
 
     useEffect(() => {
         fetch("http://localhost:3000/", {
-            method: "GET"
+            method: "GET",
+            credentials:"include"
         })
         .then((response) => {
         if (response.ok) {
@@ -46,6 +47,11 @@ export default function NHomepage() {
               <Link to = "/users/login">
                 <button className="headerbutton">
                   Login
+                </button>
+              </Link>
+              <Link to = "/users/logout">
+                <button className="headerbutton">
+                  Logout
                 </button>
               </Link>
             </div>
