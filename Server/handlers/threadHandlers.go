@@ -39,18 +39,20 @@ func ViewThreads(w http.ResponseWriter, r *http.Request) {
 
 func ViewThread(w http.ResponseWriter, r *http.Request) {
 
-	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
 	if err != nil {
 		helper.Catch(err)
 	}
+	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
+	if err != nil {
+		helper.Catch(err)
+	}
 	var post models.Thread
-	response := database.DB.QueryRow("SELECT * FROM threads WHERE ID = $1 AND CategoryID = $2", threadid, categoryid)
-	err = response.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.Authorusername)
-	helper.Catch(err)
+	thread := database.DB.QueryRow("SELECT threads.*, users.Username FROM threads INNER JOIN users ON threads.AuthorID=users.ID WHERE threads.ID = $1 AND threads.CategoryID = $2", threadid, categoryid)
+	err = thread.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.UpdatedAt, &post.Authorusername)
+	if err != nil {
+		helper.Catch(err)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)
 

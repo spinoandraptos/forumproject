@@ -49,11 +49,6 @@ export default function NHomepage() {
                   Login
                 </button>
               </Link>
-              <Link to = "/users/logout">
-                <button className="headerbutton">
-                  Logout
-                </button>
-              </Link>
             </div>
           </header>
           {categories?.map(category => (

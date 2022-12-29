@@ -91,7 +91,7 @@ func main() {
 	//this is because using merely functions is clearer and simpler given we are not doing complex operations
 
 	router.Group(func(r chi.Router) {
-		r.Post("/users/login", UserLogin)
+		r.Post("/", UserLogin)
 		r.Post("/users/signup", handlers.CreateUser)
 		r.Get("/", handlers.ViewCategories)
 		r.Get("/{categoryid}", handlers.ViewCategory)

@@ -13,15 +13,18 @@ import (
 )
 
 func ViewComments(w http.ResponseWriter, r *http.Request) {
-
+	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
+	if err != nil {
+		helper.Catch(err)
+	}
 	var allcomments []models.Comment
-	comments, err := database.DB.Query("SELECT * FROM threads ORDER BY CreatedAt DESC")
+	comments, err := database.DB.Query("SELECT comments.*, users.Username FROM comments INNER JOIN users ON comments.AuthorID=users.ID WHERE ThreadID  = $1 ORDER BY CreatedAt DESC", threadid)
 	if err != nil {
 		helper.Catch(err)
 	}
 	for comments.Next() {
 		var reply models.Comment
-		err = comments.Scan(&reply.ID, &reply.Content, &reply.AuthorID, &reply.ThreadID, &reply.CreatedAt, &reply.UpdatedAt)
+		err = comments.Scan(&reply.ID, &reply.Content, &reply.AuthorID, &reply.ThreadID, &reply.CreatedAt, &reply.UpdatedAt, &reply.Authorusername)
 		if err != nil {
 			helper.Catch(err)
 		}

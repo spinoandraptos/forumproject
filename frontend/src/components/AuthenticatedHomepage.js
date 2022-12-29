@@ -16,7 +16,8 @@ export default function AHomepage() {
 
     useEffect(() => {
         fetch("http://localhost:3000/", {
-            method: "GET"
+            method: "GET",
+            credentials: "include",
         })
         .then((response) => {
         if (response.ok) {

@@ -220,10 +220,22 @@
     color: ghostwhite;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
+.threadpost {
+    padding: 1vmax;
+    padding-left: 1.5vmax;
+    margin: 2vmax;
+    margin-top: 1vmax;
+    margin-bottom: 1vmax;
+    background-color:#1c5b9e;
+}
+.thread {
+    margin:2vmax;
+}
 .threads {
     margin-left: 1vmax;
     margin-right: 1vmax;
     padding: 1vmax;
+    margin-bottom: 1vmax;
 }
 
 .threadtitle {
@@ -252,6 +264,17 @@
     color:#0a4079;
     justify-content:flex-end;
     align-items: flex-end;
+    text-align: right;
+    font-size: calc(5px + 0.7vmax);
+}
+.threadfooter2 {
+    display: flex;
+    padding: 1vmax;
+    padding-bottom: 0;
+    padding-left: 0;
+    color:#0a4079;
+    justify-content:flex-start;
+    align-items: flex-s;
     text-align: right;
     font-size: calc(5px + 0.7vmax);
 }

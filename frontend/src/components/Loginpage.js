@@ -17,7 +17,7 @@ export default function Loginpage() {
 
     function postdata(input){
       input.preventDefault();
-      fetch(`http://localhost:3000/users/login`, {
+      fetch(`http://localhost:3000/`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         credentials: "include",
@@ -32,6 +32,7 @@ export default function Loginpage() {
             localStorage.setItem("jwt", JSON.stringify(username))
             alert("Login Successful!")
             navigate("/authenticated")
+            window.location.reload() 
         } else if (response.status === 500) {
           alert("Username not Found")
         } else if (response.status === 404) {

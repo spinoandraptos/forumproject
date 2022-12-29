@@ -18,6 +18,7 @@ export default function Logooutpage() {
           localStorage.removeItem("jwt");
           alert("Logout Successful!")
           navigate("/")
+          window.location.reload() 
       } else {
         alert("Logout Failed")
       } 

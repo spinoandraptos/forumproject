@@ -30,7 +30,7 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 
 	var human models.User
 	json.NewDecoder(r.Body).Decode(&human)
-	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1::varchar", human.Username)
+	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1", human.Username)
 	err := response.Scan(&human.ID, &human.Username, &human.Password, &human.CreatedAt, &human.UpdatedAt)
 	helper.Catch(err)
 

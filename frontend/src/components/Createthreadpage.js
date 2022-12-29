@@ -64,7 +64,7 @@ export default function Createthread() {
       </div>
       <div className="loginpage">
         <div className="logintitle">
-          Input Thread Details
+          Input Thread Details 😊
         </div>
         <div className="loginformwhole">
           <div  className="loginform">

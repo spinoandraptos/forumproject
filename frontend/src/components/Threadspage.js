@@ -1,21 +1,30 @@
 import React from "react"
-import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "./Authenticate";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 export default function Threadspage() {
 
+    const navigate = useNavigate();
     const [category, setCategory] = useState([]);
     const [threads, setThreads] = useState([]);
     const {categoryid} = useParams();
+    const {flag, Fetchusername} = useContext(AuthContext)
     console.log(categoryid);
+
+    useEffect(()=>
+      Fetchusername(),
+    [])
 
     useEffect(() => {
       Promise.all([
         fetch(`http://localhost:3000/${categoryid}`, {
-            method: "GET"
+            method: "GET",
+            credentials: "include",
         }),
         fetch(`http://localhost:3000/${categoryid}/threads`, {
-            method: "GET"
+            method: "GET",
+            credentials: "include",
         })
       ])
         .then(([categoryresponse, threadsresponse]) => 
@@ -31,6 +40,22 @@ export default function Threadspage() {
         });
     }, []);
 
+    function Clickhomepage(){
+      if (flag == true) {
+        navigate("/authenticated")
+      } else {
+        navigate("/")
+      }
+    }
+
+    function Clickpostthread(){
+      if (flag == true) {
+        navigate(`/${category.id}/threads/create`)
+      } else {
+        alert("Please Login First")
+      }
+    }
+
     return (
         <div className = "allthreads">
         <div className="herocontent">
@@ -40,11 +65,12 @@ export default function Threadspage() {
         </div>
         <header id = "homepageheader">
           <div className = "headerlinks">
-            <Link to = {`/${category.id}/threads/create`}>
-              <button className="headerbutton">
+              <button className="headerbutton" onClick={Clickhomepage}>
+                Back to Homepage
+              </button>
+              <button className="headerbutton" onClick={Clickpostthread}>
                 Post A Thread
               </button>
-            </Link>
           </div>
         </header>
         <div className="threadcategory">
@@ -57,7 +83,7 @@ export default function Threadspage() {
         </div>
         {threads?.map(thread => (
             <div className="threads">
-                <div className="thread" key={thread.id}>
+                <div key={thread.id}>
                     <div className="threadtitle">
                         {thread.title}
                     </div>
@@ -71,7 +97,7 @@ export default function Threadspage() {
                       <div className="threadfooterbutton">
                         <Link to = {`/${category.id}/threads/${thread.id}`}>
                           <button className="footerbutton threadbutton2">
-                            Reply to this Thread
+                            See Comments
                           </button>
                         </Link>
                       </div>
@@ -79,11 +105,6 @@ export default function Threadspage() {
                 </div>
             </div>
         ))}
-        <Link to = "/">
-              <button className="footerbutton threadbutton">
-                Back to Homepage
-              </button>
-            </Link>
      </div>
     )
 }
