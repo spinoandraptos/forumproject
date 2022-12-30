@@ -5,7 +5,7 @@
     background-repeat: no-repeat;
     align-items: center;
     justify-content: center;
-    background-image: url(C:\Users\Juncheng\Documents\NUS\forumproject\frontend\public\headerimage.jpg);
+    background-image: url(http://papers.co/wallpaper/papers.co-sf03-dark-blue-ocean-gradation-blur-41-iphone-wallpaper.jpg);
     height:8vmax;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .headerbutton:hover {
-    background-color: #063970;
+    background-color: #274080;
     color: ghostwhite;
 }
 
@@ -58,7 +58,7 @@
     align-items: center;
     padding: 1.6vmax;
     padding-left: 4vmax;
-    background-color: #063970;
+    background-color: #274080;
     margin:2vmax;
 }
 
@@ -83,16 +83,16 @@
     padding: 0.7vmax;
     transform: translate(0%, -100%);
     border-radius: 1vmax;
-    color: #063970;
+    color: #274080;
     font-size: calc(5px + 0.8vmax);
     font-family:DM sans;
     font-weight: 500;
-    border-color: #063970;
+    border-color: #274080;
     cursor: pointer;
 }
 
 .categorybutton:hover {
-    color:#063970;
+    color:#274080;
     background-color: gainsboro;
     border-color: ghostwhite;
 }
@@ -106,7 +106,7 @@
     text-align: center;
     padding: 2vmax;
     font-size: calc(10px + 2vmax);
-    color: #063970;
+    color: #274080;
     font-weight: 600;
 }
 .loginformwhole {
@@ -116,14 +116,13 @@
 }
 .loginform {
     display: flex;
-    align-items: center;
     justify-content: center;
-    background-color:#4e82b8;
+    background-color:#4d66ac;
     padding: 1vmax;
     color: ghostwhite;
     margin-bottom: 1vmax;
     width: 50vmax;
-    height: 10vmax;
+    height: 9vmax;
 }
 .form {
     display: flex;
@@ -133,11 +132,12 @@
     padding-right: 1.5vmax;
     font-size: calc(15px + 1vmax);
     text-align: right;
-    transform: translate(0%,+3%);
+    transform: translate(0%,6%);
 }
 .loginbox {
     padding-left: 1.5vmax;
     font-size: calc(15px + 1vmax);
+    transform: translate(0%,5%);
 }
 .logout {
     margin: 1vmax;
@@ -148,6 +148,22 @@
     justify-content: center;
     align-items: center;
     padding: 1vmax;
+}
+.postlabel {
+    padding-right: 1.5vmax;
+    font-size: calc(15px + 1vmax);
+    text-align: right;
+    transform: translate(0%,3%);
+}
+.postform {
+    display: flex;
+    justify-content: center;
+    background-color:#4d66ac;
+    padding: 1vmax;
+    color: ghostwhite;
+    margin-bottom: 1vmax;
+    width: 50vmax;
+    height: 15vmax;
 }
 .formsubmitbutton {
     border-radius: 0.3vmax;
@@ -161,8 +177,8 @@
 }
 .formsubmitbuttonblue {
     border-radius: 0.3vmax;
-    background-color:#1c5b9e;
-    border-color:#1c5b9e;
+    background-color:#32569d;
+    border-color:#32569d;
     font-size: calc(10px + 1vmax);
     color: ghostwhite;
     padding: 0.8vmax;
@@ -173,7 +189,7 @@
     cursor: pointer;
     background-color: ghostwhite;
     border-color: ghostwhite;
-    color:#063970;
+    color:#274080;
 }
 
 .bottomlink {
@@ -206,7 +222,7 @@
     margin: 2vmax;
     margin-top: 1vmax;
     margin-bottom: 1vmax;
-    background-color:#063970;
+    background-color:#274080;
 }
 .threadcategorytitle {
     font-size: calc(10px + 1.5vmax);
@@ -226,7 +242,7 @@
     margin: 2vmax;
     margin-top: 1vmax;
     margin-bottom: 1vmax;
-    background-color:#1c5b9e;
+    background-color:#1c389e;
 }
 .thread {
     margin:2vmax;
@@ -243,17 +259,17 @@
     font-size: calc(10px + 1.5vmax);
     color: ghostwhite;
     font-weight: 500;
-    background-color: #1c5b9e;
+    background-color: #3d59a1;
 }
 
 .threadcontent {
     padding: 1vmax;
     margin-top: 0;
     font-size: calc(6px + 1vmax); 
-    background-color:#f0f6fd;
+    background-color:#f7faff;
     font-weight: 400;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color:#0a4079
+    font-family:sans-serif;
+    color:#3d59a1
 }
 
 .threadfooter {
@@ -261,18 +277,19 @@
     padding: 1vmax;
     padding-bottom: 0;
     padding-left: 0;
-    color:#0a4079;
+    color:#3d59a1;
     justify-content:flex-end;
     align-items: flex-end;
     text-align: right;
     font-size: calc(5px + 0.7vmax);
+    font-weight: 400;
 }
 .threadfooter2 {
     display: flex;
     padding: 1vmax;
     padding-bottom: 0;
     padding-left: 0;
-    color:#0a4079;
+    color:#3d59a1;
     justify-content:flex-start;
     align-items: flex-s;
     text-align: right;
@@ -295,6 +312,9 @@ input[type="text"]
 {
     font-size:calc(5px + 1vmax);
 }
+input[id="password"] {
+    margin-bottom: 0.4vmax;
+}
 
 input[type="password"]
 {
@@ -304,4 +324,64 @@ input[type="password"]
 .logoutfooter {
     display: flex;
     justify-content: center;
+}
+.commentthread {
+    margin: 4vmax;
+    margin-top: 0;
+    margin-bottom: 1vmax;
+}
+.comments {
+    margin-left: 1vmax;
+    margin-right: 1vmax;
+    padding: 1vmax;
+    margin-bottom: 1vmax;
+    padding-top: 0;
+}
+.commentheader {
+    padding: 0.8vmax;
+    padding-left: 0;
+    font-size: calc(6px + 1.5vmax);
+    color: #405da9;
+    font-weight: 500;
+}
+.commentcontent {
+    padding: 0.8vmax;
+    margin-left: 3vmax;
+    font-size: calc(2px + 1vmax);
+    color:#455798;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: rgb(242, 242, 248);
+}
+.commentform {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 1vmax;
+    color: #3d59a1;
+    margin-bottom: 1vmax;
+}
+.commentbox {
+    margin-bottom:0.5vmax;
+}
+.backbutton {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    transform: translate(-4%, 0%);
+}
+input[type="commenttext"]
+{
+    font-size:calc(5px + 1vmax);
+    margin-bottom: 0.7vmax;
+}
+textarea[id="content"] {
+    resize: none;
+    font-size:calc(5px + 1vmax);
+    margin-top: 0.3vmax;
+    padding: 0.3vmax;
+}
+textarea[id="title"] {
+    resize: none;
+    font-size:calc(5px + 1vmax);
+    padding: 0.3vmax;
 }

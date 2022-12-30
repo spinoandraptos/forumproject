@@ -50,7 +50,7 @@ export default function Loginpage() {
       <div>
         <div className="herocontent">
           <div className="herotext">
-            Bop Fish Nation 
+            Bop Fish Nation 🦈 
           </div>
         </div>
         <div className="loginpage">

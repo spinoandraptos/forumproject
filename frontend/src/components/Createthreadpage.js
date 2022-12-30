@@ -67,9 +67,9 @@ export default function Createthread() {
           Input Thread Details 😊
         </div>
         <div className="loginformwhole">
-          <div  className="loginform">
+          <div className="postform">
           <form onSubmit={postdata} className="form">
-            <div className="loginlabel">
+            <div className="postlabel">
               <label htmlFor="title">
                 Title:
               </label>
@@ -79,9 +79,9 @@ export default function Createthread() {
               </label>
             </div>
             <div className="loginbox">
-              <input id="title" type="text" value={title} onChange={handleTitle} />
+              <textarea placeholder="Write Title Here" id="title" type="text" rows={1} cols={40} value={title} onChange={handleTitle} />
               <br />
-              <input id="content" type="text" value={content} onChange={handleContent}/>
+              <textarea placeholder="Write Content Here" id="content" type="text" rows={5} cols={40} value={content} onChange={handleContent}/>
               <br />
               <button className="formsubmitbutton">
                 Submit

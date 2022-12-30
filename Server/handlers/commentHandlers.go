@@ -62,7 +62,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	var reply models.Comment
 	json.NewDecoder(r.Body).Decode(&reply)
 
-	response, err := database.DB.Exec("INSERT INTO comments (ID, Content, AuthorID, ThreadID, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5, $6)", &reply.ID, &reply.Content, &reply.AuthorID, &reply.ThreadID, time.Now(), time.Now())
+	response, err := database.DB.Exec("INSERT INTO comments (Content, AuthorID, ThreadID, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5)", &reply.Content, &reply.AuthorID, &reply.ThreadID, time.Now(), time.Now())
 	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()

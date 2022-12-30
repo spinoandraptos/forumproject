@@ -6,54 +6,114 @@ import { useState } from "react";
 export default function Createcomment() {
 
   const navigate = useNavigate();
+  const {categoryid, threadid} = useParams();
+  const {flag, userid, Fetchusername} = useContext(AuthContext);
+  const [thread, setThread] = useState([]);
+  const [content, setContent] = useState("");
 
-  const {categoryid, threadid} = useParams()
-  console.log(categoryid, threadid)
+  const handleContent = (input) => {
+    setContent(input.target.value);
+  };
 
+  useEffect(() => 
+    Fetchusername(), 
+  [])
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/${categoryid}/threads/${threadid}`, {
+            method: "GET",
+            credentials: "include",
+        })
+        .then((threadresponse) => {
+          if (threadresponse.ok) {
+              return threadresponse.json();
+          }
+        })
+          .then((threaddata) => {
+              setThread(threaddata);
+          });
+  },[])
 
   function postdata(input){
+
+    if (flag == true) {
     input.preventDefault();
     fetch(`/${categoryid}/threads/${threadid}/comments`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Content: content,
+        AuthorID: parseInt(userid),
+        ThreadID: parseInt(threadid)
+      })
     })
     .then((response) => {
       if (response.ok) {
           console.log("Response:" + response)
-          localStorage.removeItem("jwt");
-          alert("Logout Successful!")
-          navigate("/")
+          alert("Comment Posted Successfully!")
+          navigate(`/${categoryid}/threads/${threadid}`)
+      } else if (response.status===401) {
+        alert("Server Does Not Detect JWT")
       } else {
-        alert("Logout Failed")
-      } 
+        alert("Error: Comment Cannot Posted")
+      }
     })
+  } else {
+    alert("Please Login First")
+    navigate("/users/login")
+  }
   }
 
   return (
-        <div>
-          <div className="herocontent">
-            <div className="herotext">
-              Bop Fish Nation 
-            </div>
+    <div>
+    <div className="herocontent">
+      <div className="herotext">
+        Bop Fish Nation 🦈 
+      </div>
+    </div>
+    <div className="logintitle">
+        Input Comment 😊
+      </div>
+    <div className="thread commentthread">
+          <div className="threadtitle">
+            {thread.title}
           </div>
-          <div className="logout">
-            <div className="logoutbox">
-              <form onSubmit={postdata} className="form">
-                <button className="formsubmitbuttonblue">
-                  Logout
-                </button>
-              </form>
-            </div>
+          <div className="threadcontent commentpagethreadcontent">
+            {thread.content}
+            <div className="threadfooter">
+            Posted by {thread.authorusername}
           </div>
-          <div className="logoutfooter">
-            <Link to = "/authenticated">
-              <button className="footerbutton">
-                Return To Homepage
-              </button>
-            </Link>
           </div>
         </div>
-    )
+    <div className="loginpage">
+      <div className="loginformwhole">
+        <div  className="commentform">
+        <form onSubmit={postdata} className="form">
+          <div className="loginlabel">
+            <label htmlFor="content">
+              Comment:
+            </label>
+          </div>
+          <div className="loginbox commentbox">
+            <textarea placeholder="What are your thoughts?" rows={5} cols={40} id="content" type="commenttext" value={content} onChange={handleContent}/>
+            <br />
+            <button className="formsubmitbutton">
+              Submit
+            </button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+    <div className="bottomlink backbutton">
+      <Link to = {`/${categoryid}/threads/${threadid}`}>
+        <button className="footerbutton">
+          Back to Threads
+        </button>
+      </Link>
+    </div>
+  </div>
+  )
 
 }

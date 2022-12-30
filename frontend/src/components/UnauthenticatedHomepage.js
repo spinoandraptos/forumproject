@@ -34,7 +34,7 @@ export default function NHomepage() {
         <div className = "allcategories">
           <div className="herocontent">
             <div className="herotext">
-              Bop Fish Nation 
+              Bop Fish Nation 🦈
             </div>
           </div>
           <header id = "homepageheader">

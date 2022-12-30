@@ -60,7 +60,7 @@ export default function Threadspage() {
         <div className = "allthreads">
         <div className="herocontent">
           <div className="herotext">
-            Bop Fish Nation 
+            Bop Fish Nation 🦈
           </div>
         </div>
         <header id = "homepageheader">

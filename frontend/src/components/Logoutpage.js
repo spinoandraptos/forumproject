@@ -29,14 +29,14 @@ export default function Logooutpage() {
         <div>
           <div className="herocontent">
             <div className="herotext">
-              Bop Fish Nation 
+              Bop Fish Nation 🦈
             </div>
           </div>
           <div className="logout">
             <div className="logoutbox">
               <form onSubmit={postdata} className="form">
                 <button className="formsubmitbuttonblue">
-                  Logout
+                  Logout 
                 </button>
               </form>
             </div>

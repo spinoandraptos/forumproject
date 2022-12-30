@@ -8,8 +8,7 @@ export default function Threadpage() {
     const navigate = useNavigate();
     const [thread, setThread] = useState([]);
     const [comments, setComments] = useState([]);
-    const {categoryid} = useParams();
-    const {threadid} = useParams();
+    const {categoryid, threadid} = useParams();
     const {flag, Fetchusername} = useContext(AuthContext);
 
     useEffect(()=>
@@ -60,7 +59,7 @@ export default function Threadpage() {
         <div className = "allthreads">
         <div className="herocontent">
           <div className="herotext">
-            Bop Fish Nation 
+            Bop Fish Nation 🦈 
           </div>
         </div>
         <header id = "homepageheader">
@@ -93,7 +92,7 @@ export default function Threadpage() {
             <div className="comments">
                 <div className="comment" key={comment.id}>
                     <div className="commentheader">
-                        {comment.authorusername}
+                        🙂 {comment.authorusername} :
                     </div>
                     <div className="commentcontent">
                         {comment.content}
