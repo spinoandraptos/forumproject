@@ -15,20 +15,14 @@ import (
 func ViewThreads(w http.ResponseWriter, r *http.Request) {
 
 	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	var allthreads []models.Thread
 	threads, err := database.DB.Query("SELECT threads.*, users.Username FROM threads INNER JOIN users ON threads.AuthorID=users.ID WHERE CategoryID = $1 ORDER BY CreatedAt DESC", categoryid)
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	for threads.Next() {
 		var post models.Thread
 		err = threads.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.UpdatedAt, &post.Authorusername)
-		if err != nil {
-			helper.Catch(err)
-		}
+		helper.Catch(err)
 		allthreads = append(allthreads, post)
 	}
 	threads.Close()
@@ -40,19 +34,13 @@ func ViewThreads(w http.ResponseWriter, r *http.Request) {
 func ViewThread(w http.ResponseWriter, r *http.Request) {
 
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	var post models.Thread
 	thread := database.DB.QueryRow("SELECT threads.*, users.Username FROM threads INNER JOIN users ON threads.AuthorID=users.ID WHERE threads.ID = $1 AND threads.CategoryID = $2", threadid, categoryid)
 	err = thread.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.UpdatedAt, &post.Authorusername)
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)
 
@@ -81,13 +69,9 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	var post models.Thread
 
 	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	json.NewDecoder(r.Body).Decode(&post)
 
 	response, err := database.DB.Exec("UPDATE threads SET Title = $3, Content = $4, UpdatedAt = $5 WHERE ID = $1 AND CategoryID = $2", threadid, categoryid, &post.Title, &post.Content, time.Now())
@@ -108,13 +92,9 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	var post models.Thread
 
 	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	json.NewDecoder(r.Body).Decode(&post)
 
 	response, err := database.DB.Exec("DELETE * FROM threads WHERE ID = $1 AND CategoryID = $2", threadid, categoryid)

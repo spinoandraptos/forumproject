@@ -25,7 +25,6 @@ import { createContext, useState } from "react";
       })
       .then((userdata)=> {
         setUserid(userdata)
-        console.log("USERID:" + userdata)
       })
     }
   }

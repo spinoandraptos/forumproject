@@ -17,6 +17,7 @@ import Threadspage from './components/Threadspage';
 import Threadpage from './components/Threadpage';
 import Createthread from './components/Createthreadpage';
 import Createcomment from './components/Postcommentpage';
+import Editcomment from './components/EditCommentpage';
 import Logoutpage from './components/Logoutpage';
 
 
@@ -35,6 +36,7 @@ export default function Forum() {
         <Route path="/:categoryid/threads/:threadid" element={<Threadpage />} />
         <Route path="/:categoryid/threads/create" element={<Createthread />} />
         <Route path="/:categoryid/threads/:threadid/comments/create" element={<Createcomment />} />
+        <Route path="/:categoryid/threads/:threadid/comments/:commentid" element={<Editcomment />} />
       </Routes>
     </Router>
   </AuthContextProvider>

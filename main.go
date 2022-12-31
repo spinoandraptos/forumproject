@@ -98,7 +98,7 @@ func main() {
 		r.Get("/{categoryid}/threads", handlers.ViewThreads)
 		r.Get("/{categoryid}/threads/{threadid}", handlers.ViewThread)
 		r.Get("/{categoryid}/threads/{threadid}/comments", handlers.ViewComments)
-		r.Get("/categories/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
+		r.Get("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
 	})
 
 	router.Group(func(r chi.Router) {

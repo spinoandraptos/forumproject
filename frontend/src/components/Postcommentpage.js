@@ -56,7 +56,7 @@ export default function Createcomment() {
       } else if (response.status===401) {
         alert("Server Does Not Detect JWT")
       } else {
-        alert("Error: Comment Cannot Posted")
+        alert("Error: Comment Cannot be Posted")
       }
     })
   } else {
@@ -96,7 +96,7 @@ export default function Createcomment() {
             </label>
           </div>
           <div className="loginbox commentbox">
-            <textarea placeholder="What are your thoughts?" rows={5} cols={40} id="content" type="commenttext" value={content} onChange={handleContent}/>
+            <textarea placeholder="What are your thoughts?" maxLength={1000} minLength={1} rows={5} cols={40} id="content" type="commenttext" value={content} onChange={handleContent}/>
             <br />
             <button className="formsubmitbutton">
               Submit
@@ -109,7 +109,7 @@ export default function Createcomment() {
     <div className="bottomlink backbutton">
       <Link to = {`/${categoryid}/threads/${threadid}`}>
         <button className="footerbutton">
-          Back to Threads
+          Back to Comments
         </button>
       </Link>
     </div>

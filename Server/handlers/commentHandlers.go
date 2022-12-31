@@ -14,20 +14,14 @@ import (
 
 func ViewComments(w http.ResponseWriter, r *http.Request) {
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	var allcomments []models.Comment
 	comments, err := database.DB.Query("SELECT comments.*, users.Username FROM comments INNER JOIN users ON comments.AuthorID=users.ID WHERE ThreadID  = $1 ORDER BY CreatedAt DESC", threadid)
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	for comments.Next() {
 		var reply models.Comment
 		err = comments.Scan(&reply.ID, &reply.Content, &reply.AuthorID, &reply.ThreadID, &reply.CreatedAt, &reply.UpdatedAt, &reply.Authorusername)
-		if err != nil {
-			helper.Catch(err)
-		}
+		helper.Catch(err)
 		allcomments = append(allcomments, reply)
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -36,21 +30,13 @@ func ViewComments(w http.ResponseWriter, r *http.Request) {
 
 func ViewComment(w http.ResponseWriter, r *http.Request) {
 
-	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	commentid, err := strconv.Atoi(chi.URLParam(r, "commentid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	var reply models.Comment
-	response := database.DB.QueryRow("SELECT * FROM comments WHERE ID = $1 AND ThreadID = $2 AND CategoryID = $3", commentid, threadid, categoryid)
-	err = response.Scan(&reply.ID, &reply.Content, &reply.AuthorID, &reply.ThreadID, &reply.CreatedAt, &reply.UpdatedAt)
+	response := database.DB.QueryRow("SELECT comments.*, users.Username FROM comments INNER JOIN users ON comments.AuthorID=users.ID WHERE comments.ID = $1 AND comments.ThreadID = $2", commentid, threadid)
+	err = response.Scan(&reply.ID, &reply.Content, &reply.AuthorID, &reply.ThreadID, &reply.CreatedAt, &reply.UpdatedAt, &reply.Authorusername)
 	helper.Catch(err)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(reply)
@@ -79,21 +65,13 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 
 	var reply models.Comment
 
-	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	commentid, err := strconv.Atoi(chi.URLParam(r, "commentid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	json.NewDecoder(r.Body).Decode(&reply)
 
-	response, err := database.DB.Exec("UPDATE comments SET Content = $4, UpdatedAt = $5 WHERE ID = $1 AND ThreadID = $2 AND CategoryID = $3", commentid, threadid, categoryid, &reply.Content, time.Now())
+	response, err := database.DB.Exec("UPDATE comments SET Content = $3, UpdatedAt = $4 WHERE ID = $1 AND ThreadID = $2", commentid, threadid, &reply.Content, time.Now())
 	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()
@@ -108,23 +86,12 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 
 func DeleteComment(w http.ResponseWriter, r *http.Request) {
 
-	var reply models.Comment
-
-	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
-	if err != nil {
-		helper.Catch(err)
-	}
 	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
-	if err != nil {
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	commentid, err := strconv.Atoi(chi.URLParam(r, "commentid"))
-	if err != nil {
-		helper.Catch(err)
-	}
-	json.NewDecoder(r.Body).Decode(&reply)
+	helper.Catch(err)
 
-	response, err := database.DB.Exec("DELETE * FROM threads WHERE ID = $1 AND ThreadID = $2 AND CategoryID = $3", commentid, threadid, categoryid)
+	response, err := database.DB.Exec("DELETE FROM comments WHERE ID = $1 AND ThreadID = $2", commentid, threadid)
 	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()

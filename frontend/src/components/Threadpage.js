@@ -6,7 +6,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 export default function Threadpage() {
 
     const navigate = useNavigate();
-    const [thread, setThread] = useState([]);
+    const [thread, setThread] = useState({});
     const [comments, setComments] = useState([]);
     const {categoryid, threadid} = useParams();
     const {flag, Fetchusername} = useContext(AuthContext);
@@ -55,6 +55,22 @@ export default function Threadpage() {
       }
     }
 
+    function Clickdeletecomment(value){
+        fetch(`/${categoryid}/threads/${threadid}/comments/${value}`, {
+          method: "DELETE",
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then((response) => {
+          if (response.ok) {
+              console.log("Response:" + response)
+              alert("Comment Deletion Successful!")
+              window.location.reload()
+          } else if (!response.ok) {
+            alert("Comment Deletion Failed")
+          }
+        })
+      }
+
     return (
         <div className = "allthreads">
         <div className="herocontent">
@@ -88,8 +104,30 @@ export default function Threadpage() {
           </div>
           </div>
         </div>
-        {comments?.map(comment => (
+        {comments?.map(comment => (comment.authorusername === JSON.parse(localStorage.getItem("jwt"))? (
             <div className="comments">
+                <div className="comment" key={comment.id}>
+                    <div className="commentheader">
+                        😎 {comment.authorusername} :
+                    </div>
+                    <div className="commentcontent">
+                        {comment.content}
+                    </div>
+                    <div className="commentfooter">
+                    <Link to = {`/${categoryid}/threads/${threadid}/comments/${comment.id}`}>
+                      <button className="footerbutton2">
+                        Edit Comment
+                      </button>
+                    </Link>
+                    <button className="footerbutton3" onClick={()=>{Clickdeletecomment(comment.id)}}>
+                        Delete Comment
+                      </button>
+                    </div>
+                </div>
+            </div>
+        )
+        : (
+          <div className="comments">
                 <div className="comment" key={comment.id}>
                     <div className="commentheader">
                         🙂 {comment.authorusername} :
@@ -97,8 +135,9 @@ export default function Threadpage() {
                     <div className="commentcontent">
                         {comment.content}
                     </div>
+                    </div>
                 </div>
-            </div>
+         )
         ))}
      </div>
     )

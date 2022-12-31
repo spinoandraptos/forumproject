@@ -79,9 +79,9 @@ export default function Createthread() {
               </label>
             </div>
             <div className="loginbox">
-              <textarea placeholder="Write Title Here" id="title" type="text" rows={1} cols={40} value={title} onChange={handleTitle} />
+              <textarea placeholder="Write Title Here" id="title" maxLength={500} minLength={1} type="text" rows={1} cols={40} value={title} onChange={handleTitle} />
               <br />
-              <textarea placeholder="Write Content Here" id="content" type="text" rows={5} cols={40} value={content} onChange={handleContent}/>
+              <textarea placeholder="Write Content Here" id="content" maxLength={1000} minLength={1} type="text" rows={5} cols={40} value={content} onChange={handleContent}/>
               <br />
               <button className="formsubmitbutton">
                 Submit

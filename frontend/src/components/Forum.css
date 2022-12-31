@@ -212,7 +212,32 @@
     padding: 0.5vmax;
     font-size: calc(10px + 0.5vmax);
 }
+.footerbutton2 {
+    background-color: ghostwhite;
+    border-color: gainsboro;
+    border-radius: 0.4vmax;
+    padding: 0.2vmax;
+    font-size: calc(5px + 0.5vmax);
+    margin-top: 0.3vmax;
+    margin-right: 0.7vmax;
+}
+.footerbutton3 {
+    background-color: ghostwhite;
+    border-color: gainsboro;
+    border-radius: 0.4vmax;
+    padding: 0.2vmax;
+    font-size: calc(5px + 0.5vmax);
+    margin-top: 0.3vmax;
+}
+.footerbutton2:hover {
+    cursor: pointer;
+    background-color: gainsboro;
+}
 .footerbutton:hover {
+    cursor: pointer;
+    background-color: gainsboro;
+}
+.footerbutton3:hover {
     cursor: pointer;
     background-color: gainsboro;
 }
@@ -337,10 +362,23 @@ input[type="password"]
     margin-bottom: 1vmax;
     padding-top: 0;
 }
+.comments2 {
+    margin: 1vmax;
+    margin-top: 4vmax;
+    padding: 1vmax;
+    padding-top: 0;
+}
 .commentheader {
     padding: 0.8vmax;
     padding-left: 0;
     font-size: calc(6px + 1.5vmax);
+    color: #405da9;
+    font-weight: 500;
+}
+.commentheader2 {
+    padding: 0.8vmax;
+    padding-left: 1.4vmax;
+    font-size: calc(10px + 1.8vmax);
     color: #405da9;
     font-weight: 500;
 }
@@ -351,6 +389,19 @@ input[type="password"]
     color:#455798;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: rgb(242, 242, 248);
+}
+.commentcontent2 {
+    padding-left: 1.4vmax;
+    margin-right: 1vmax;
+    font-size: calc(5px + 1.3vmax);
+    color:#455798;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.commentfooter {
+    margin-top: 0.5vmax;
+    font-size: calc(2px + 0.7vmax);
+    display: flex;
+    justify-content: flex-end;
 }
 .commentform {
     display: flex;
@@ -384,4 +435,12 @@ textarea[id="title"] {
     resize: none;
     font-size:calc(5px + 1vmax);
     padding: 0.3vmax;
+}
+.editcommentform {
+    margin-top: 0.4vmax;
+}
+.editcomment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
