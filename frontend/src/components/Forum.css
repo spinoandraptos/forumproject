@@ -458,3 +458,8 @@ textarea[id="title"] {
     justify-content: center;
     align-items: center;
 }
+.footerdate {
+    margin-right: 1vmax;
+    margin-top: 0.5vmax;
+    color: #1c389e;
+}

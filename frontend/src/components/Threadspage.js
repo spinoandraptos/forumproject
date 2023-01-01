@@ -2,6 +2,7 @@ import React from "react"
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./Authenticate";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import moment from "moment";
 
 export default function Threadspage() {
 
@@ -108,7 +109,7 @@ export default function Threadspage() {
                     </div>
                     <div className="threadfooter">
                       <div>
-                        Posted by {thread.authorusername}
+                        Posted by {thread.authorusername} at {moment(thread.createdat).format('DD-MM-YYYY hh:mm A')}
                       </div>
                       <div className="threadfooterbutton">
                       <Link to = {`/${category.id}/threads/${thread.id}`}>
@@ -140,7 +141,7 @@ export default function Threadspage() {
                     </div>
                     <div className="threadfooter">
                       <div>
-                        Posted by {thread.authorusername}
+                        Posted by {thread.authorusername} at {moment(thread.CreatedAt).format('YYYY-MM-DD hh:mm')}
                       </div>
                       <div className="threadfooterbutton">
                         <Link to = {`/${category.id}/threads/${thread.id}/comments`}>

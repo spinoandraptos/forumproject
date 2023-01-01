@@ -1,4 +1,5 @@
 import React from "react"
+import moment from "moment";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./Authenticate";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -114,12 +115,15 @@ export default function Threadpage() {
                         {comment.content}
                     </div>
                     <div className="commentfooter">
-                    <Link to = {`/${categoryid}/threads/${threadid}/comments/${comment.id}`}>
-                      <button className="footerbutton2">
-                        Edit Comment
-                      </button>
-                    </Link>
-                    <button className="footerbutton3" onClick={()=>{Clickdeletecomment(comment.id)}}>
+                      <div className="footerdate">
+                        Posted at {moment(comment.CreatedAt).format('YYYY-MM-DD hh:mm')}
+                      </div>
+                      <Link to = {`/${categoryid}/threads/${threadid}/comments/${comment.id}`}>
+                        <button className="footerbutton2">
+                          Edit Comment
+                        </button>
+                      </Link>
+                      <button className="footerbutton3" onClick={()=>{Clickdeletecomment(comment.id)}}>
                         Delete Comment
                       </button>
                     </div>
@@ -134,6 +138,9 @@ export default function Threadpage() {
                     </div>
                     <div className="commentcontent">
                         {comment.content}
+                    </div>
+                    <div className="commentfooter">
+                      Posted at {moment(comment.CreatedAt).format('YYYY-MM-DD hh:mm')}
                     </div>
                     </div>
                 </div>

@@ -29,8 +29,8 @@ create table threads (
   ID          serial primary key,
   Title       text,
   Content     text,  
-  AuthorID    integer references users(ID),
-  CategoryID  integer references categories(ID),
+  AuthorID    integer references users(ID) on delete cascade,
+  CategoryID  integer references categories(ID) on delete cascade,
   CreatedAt   timestamp not null,
   UpdatedAt   timestamp not null
 );
@@ -38,8 +38,8 @@ create table threads (
 create table comments (
   ID          serial primary key,
   Content     text,
-  AuthorID    integer references users(ID),
-  ThreadID    integer references threads(ID),
+  AuthorID    integer references users(ID) on delete cascade,
+  ThreadID    integer references threads(ID) on delete cascade,
   CreatedAt  timestamp not null,
   UpdatedAt   timestamp not null
 );

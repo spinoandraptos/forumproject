@@ -107,6 +107,8 @@ func main() {
 		r.Post("/users/{username}", handlers.ViewUser)
 		r.Post("/users/logout", UserLogout)
 		r.Put("/users/{userid}", handlers.UpdateUser)
+		r.Put("/users/{userid}/username", handlers.UpdateUsername)
+		r.Put("/users/{userid}/password", handlers.UpdateUserpassword)
 		r.Delete("/users/{userid}", handlers.DeleteUser)
 		r.Post("/{categoryid}/threads", handlers.CreateThread)
 		r.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)

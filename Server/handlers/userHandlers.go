@@ -149,6 +149,50 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func UpdateUsername(w http.ResponseWriter, r *http.Request) {
+
+	var human models.User
+
+	userid, err := strconv.Atoi(chi.URLParam(r, "userid"))
+	helper.Catch(err)
+
+	json.NewDecoder(r.Body).Decode(&human)
+
+	response, err := database.DB.Exec("UPDATE users SET Username = $2, UpdatedAt = $3 WHERE ID = $1", userid, &human.Username, time.Now())
+	helper.Catch(err)
+
+	rowsAffected, err := response.RowsAffected()
+	helper.Catch(err)
+
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "User Update Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "User Updated Successfully!"})
+	}
+}
+
+func UpdateUserpassword(w http.ResponseWriter, r *http.Request) {
+
+	var human models.User
+
+	userid, err := strconv.Atoi(chi.URLParam(r, "userid"))
+	helper.Catch(err)
+
+	json.NewDecoder(r.Body).Decode(&human)
+
+	response, err := database.DB.Exec("UPDATE users SET Password = $2, UpdatedAt = $3 WHERE ID = $1", userid, &human.Password, time.Now())
+	helper.Catch(err)
+
+	rowsAffected, err := response.RowsAffected()
+	helper.Catch(err)
+
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "User Update Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "User Updated Successfully!"})
+	}
+}
+
 /*
 	-we first create a variable human of type user
 	-then we fetch the value of the URL parameter (user id) using chi.URLParam
@@ -166,7 +210,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&human)
 
-	response, err := database.DB.Exec("DELETE * FROM users WHERE ID = $1", userid)
+	response, err := database.DB.Exec("DELETE FROM users WHERE ID = $1", userid)
 	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()
