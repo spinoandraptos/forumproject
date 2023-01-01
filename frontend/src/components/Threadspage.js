@@ -56,6 +56,22 @@ export default function Threadspage() {
       }
     }
 
+    function Clickdeletethread(value){
+      fetch(`/${categoryid}/threads/${value}`, {
+        method: "DELETE",
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then((response) => {
+        if (response.ok) {
+            console.log("Response:" + response)
+            alert("Thread Deletion Successful!")
+            window.location.reload()
+        } else if (!response.ok) {
+          alert("Thread Deletion Failed")
+        }
+      })
+    }
+
     return (
         <div className = "allthreads">
         <div className="herocontent">
@@ -81,7 +97,7 @@ export default function Threadspage() {
             {category.description}
           </div>
         </div>
-        {threads?.map(thread => (
+        {threads?.map(thread => (thread.authorusername === JSON.parse(localStorage.getItem("jwt"))? (
             <div className="threads">
                 <div key={thread.id}>
                     <div className="threadtitle">
@@ -95,7 +111,15 @@ export default function Threadspage() {
                         Posted by {thread.authorusername}
                       </div>
                       <div className="threadfooterbutton">
-                        <Link to = {`/${category.id}/threads/${thread.id}`}>
+                      <Link to = {`/${category.id}/threads/${thread.id}`}>
+                          <button className="footerbutton threadbutton2">
+                            Edit Thread
+                          </button>
+                        </Link>
+                        <button className="footerbutton threadbutton2" onClick={()=>{Clickdeletethread(thread.id)}}>
+                            Delete Thread
+                          </button>
+                        <Link to = {`/${category.id}/threads/${thread.id}/comments`}>
                           <button className="footerbutton threadbutton2">
                             See Comments
                           </button>
@@ -104,6 +128,31 @@ export default function Threadspage() {
                     </div>
                 </div>
             </div>
+          )
+        : (
+          <div className="threads">
+                <div key={thread.id}>
+                    <div className="threadtitle">
+                        {thread.title}
+                    </div>
+                    <div className="threadcontent">
+                        {thread.content}
+                    </div>
+                    <div className="threadfooter">
+                      <div>
+                        Posted by {thread.authorusername}
+                      </div>
+                      <div className="threadfooterbutton">
+                        <Link to = {`/${category.id}/threads/${thread.id}/comments`}>
+                          <button className="footerbutton threadbutton2">
+                            See Comments
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          )
         ))}
      </div>
     )

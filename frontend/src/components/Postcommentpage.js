@@ -52,7 +52,7 @@ export default function Createcomment() {
       if (response.ok) {
           console.log("Response:" + response)
           alert("Comment Posted Successfully!")
-          navigate(`/${categoryid}/threads/${threadid}`)
+          navigate(`/${categoryid}/threads/${threadid}/comments`)
       } else if (response.status===401) {
         alert("Server Does Not Detect JWT")
       } else {
@@ -107,7 +107,7 @@ export default function Createcomment() {
       </div>
     </div>
     <div className="bottomlink backbutton">
-      <Link to = {`/${categoryid}/threads/${threadid}`}>
+      <Link to = {`/${categoryid}/threads/${threadid}/comments`}>
         <button className="footerbutton">
           Back to Comments
         </button>

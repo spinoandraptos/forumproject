@@ -286,12 +286,26 @@
     font-weight: 500;
     background-color: #3d59a1;
 }
-
+.threadtitle2 {
+    padding: 0.8vmax;
+    padding-left: 1.4vmax;
+    font-size: calc(10px + 1.5vmax);
+    color: #3d59a1;
+    font-weight: 500;
+}
 .threadcontent {
     padding: 1vmax;
     margin-top: 0;
     font-size: calc(6px + 1vmax); 
     background-color:#f7faff;
+    font-weight: 400;
+    font-family:sans-serif;
+    color:#3d59a1
+}
+.threadcontent2 {
+    padding: 0.8vmax;
+    padding-left: 1.4vmax;
+    font-size: calc(6px + 1vmax); 
     font-weight: 400;
     font-family:sans-serif;
     color:#3d59a1
@@ -437,7 +451,7 @@ textarea[id="title"] {
     padding: 0.3vmax;
 }
 .editcommentform {
-    margin-top: 0.4vmax;
+    margin-top: 0.8vmax;
 }
 .editcomment {
     display: flex;

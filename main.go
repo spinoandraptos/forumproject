@@ -111,6 +111,8 @@ func main() {
 		r.Post("/{categoryid}/threads", handlers.CreateThread)
 		r.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
 		r.Put("/{categoryid}/threads/{threadid}", handlers.UpdateThread)
+		r.Put("/{categoryid}/threads/{threadid}/title", handlers.UpdateThreadTitle)
+		r.Put("/{categoryid}/threads/{threadid}/content", handlers.UpdateThreadContent)
 		r.Put("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.UpdateComment)
 		r.Delete("/{categoryid}/threads/{threadid}", handlers.DeleteThread)
 		r.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)

@@ -87,6 +87,52 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func UpdateThreadTitle(w http.ResponseWriter, r *http.Request) {
+
+	var post models.Thread
+
+	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
+	helper.Catch(err)
+	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
+	helper.Catch(err)
+	json.NewDecoder(r.Body).Decode(&post)
+
+	response, err := database.DB.Exec("UPDATE threads SET Title = $3, UpdatedAt = $4 WHERE ID = $1 AND CategoryID = $2", threadid, categoryid, &post.Title, time.Now())
+	helper.Catch(err)
+
+	rowsAffected, err := response.RowsAffected()
+	helper.Catch(err)
+
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Update Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Updated Successfully!"})
+	}
+}
+
+func UpdateThreadContent(w http.ResponseWriter, r *http.Request) {
+
+	var post models.Thread
+
+	categoryid, err := strconv.Atoi(chi.URLParam(r, "categoryid"))
+	helper.Catch(err)
+	threadid, err := strconv.Atoi(chi.URLParam(r, "threadid"))
+	helper.Catch(err)
+	json.NewDecoder(r.Body).Decode(&post)
+
+	response, err := database.DB.Exec("UPDATE threads SET Content = $3, UpdatedAt = $4 WHERE ID = $1 AND CategoryID = $2", threadid, categoryid, &post.Content, time.Now())
+	helper.Catch(err)
+
+	rowsAffected, err := response.RowsAffected()
+	helper.Catch(err)
+
+	if rowsAffected == 0 {
+		helper.RespondwithERROR(w, http.StatusBadRequest, "Thread Update Failed :(")
+	} else {
+		helper.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Thread Updated Successfully!"})
+	}
+}
+
 func DeleteThread(w http.ResponseWriter, r *http.Request) {
 
 	var post models.Thread
@@ -97,7 +143,7 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	helper.Catch(err)
 	json.NewDecoder(r.Body).Decode(&post)
 
-	response, err := database.DB.Exec("DELETE * FROM threads WHERE ID = $1 AND CategoryID = $2", threadid, categoryid)
+	response, err := database.DB.Exec("DELETE FROM threads WHERE ID = $1 AND CategoryID = $2", threadid, categoryid)
 	helper.Catch(err)
 
 	rowsAffected, err := response.RowsAffected()

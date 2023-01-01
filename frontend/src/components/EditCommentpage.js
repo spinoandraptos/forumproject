@@ -61,7 +61,7 @@ export default function Editcomment() {
           if (response.ok) {
               console.log("Response:" + response)
               alert("Comment Updated Successfully!")
-              navigate(`/${categoryid}/threads/${threadid}`)
+              navigate(`/${categoryid}/threads/${threadid}/comments`)
           } else if (response.status===401) {
             alert("Server Does Not Detect JWT")
           } else {
@@ -92,7 +92,7 @@ export default function Editcomment() {
                 Back to Threads
               </button>
             </Link>
-            <Link to = {`/${categoryid}/threads/${threadid}`}>
+            <Link to = {`/${categoryid}/threads/${threadid}/comments`}>
               <button className="headerbutton">
                 Back to Comments
               </button>
