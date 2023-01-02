@@ -10,7 +10,7 @@ import { createContext, useState } from "react";
     if (localStorage.getItem("jwt")) {
         setFlag(true)
         
-      fetch(`http://localhost:3000/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
+      fetch(`http://localhost:3000/users/${JSON.parse(localStorage.getItem("jwt"))}/id`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

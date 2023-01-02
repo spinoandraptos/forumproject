@@ -19,6 +19,7 @@ import Createthread from './components/Createthreadpage';
 import Createcomment from './components/Postcommentpage';
 import Editcomment from './components/EditCommentpage';
 import Editthread from './components/Editthreadpage';
+import Edituser from './components/Edituserinfopage';
 import Logoutpage from './components/Logoutpage';
 
 
@@ -33,6 +34,7 @@ export default function Forum() {
         <Route path="/users/login" element={<Loginpage />} />
         <Route path="/users/logout" element={<Logoutpage />} />
         <Route path="/users/signup" element={<Registerpage />} />
+        <Route path="/users/:userid" element={<Edituser />} />
         <Route path="/:categoryid" element={<Threadspage />} />
         <Route path="/:categoryid/threads/:threadid/comments" element={<Threadpage />} />
         <Route path="/:categoryid/threads/:threadid" element={<Editthread />} />

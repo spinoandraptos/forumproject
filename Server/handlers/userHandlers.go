@@ -26,7 +26,7 @@ import (
 -we close the response and thus connection to the database at the very end so that it is ready for another connection later
 */
 
-func ViewUser(w http.ResponseWriter, r *http.Request) {
+func ViewUserID(w http.ResponseWriter, r *http.Request) {
 
 	var human models.User
 	json.NewDecoder(r.Body).Decode(&human)
@@ -36,6 +36,18 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(human.ID)
+}
+
+func Viewuser(w http.ResponseWriter, r *http.Request) {
+
+	var human models.User
+	json.NewDecoder(r.Body).Decode(&human)
+	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1", human.Username)
+	err := response.Scan(&human.ID, &human.Username, &human.Password, &human.CreatedAt, &human.UpdatedAt)
+	helper.Catch(err)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(human)
 }
 
 // the login function will take the juser info input of the request body and check if it matches the user data in the database

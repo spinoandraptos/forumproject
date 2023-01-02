@@ -140,7 +140,9 @@ export default function Threadpage() {
                         {comment.content}
                     </div>
                     <div className="commentfooter">
-                      Posted at {moment(comment.CreatedAt).format('YYYY-MM-DD hh:mm')}
+                      <div className="footerdate">
+                        Posted at {moment(comment.CreatedAt).format('YYYY-MM-DD hh:mm')}
+                      </div>
                     </div>
                     </div>
                 </div>

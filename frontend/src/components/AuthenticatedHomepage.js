@@ -1,5 +1,6 @@
 import React from "react"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "./Authenticate";
 import { Link } from "react-router-dom";
 import "./Forum.css";
 import "./Userpage"
@@ -13,6 +14,31 @@ import "./Userpage"
 export default function AHomepage() {
 
     const [categories, setCategories] = useState([]);
+    const {userid, Fetchusername} = useContext(AuthContext);
+    const [user, setUser] = useState({})
+
+    useEffect(()=>
+      Fetchusername(),
+    [])
+
+    useEffect(()=>{
+      fetch(`http://localhost:3000/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Username: JSON.parse(localStorage.getItem("jwt"))
+      })
+      })
+      .then((response)=> {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((userdata)=> {
+        setUser(userdata)
+      })
+    },[])
 
     useEffect(() => {
         fetch("http://localhost:3000/", {
@@ -39,6 +65,14 @@ export default function AHomepage() {
           </div>
           <header id = "homepageheader">
             <div className = "headerlinks">
+            <div className="userwelcome">
+              Welcome, {user.username}!
+            </div>
+            <Link to = {`/users/${userid}`}>
+                <button className="headerbutton">
+                  Edit User Info
+                </button>
+              </Link>
               <Link to = "/users/logout">
                 <button className="headerbutton">
                   Logout

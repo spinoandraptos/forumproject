@@ -53,6 +53,22 @@
     background-color: #274080;
     color: ghostwhite;
 }
+.headerbuttonwarning {
+    background-color:white;
+    color: #063970;
+    text-align: center;
+    font-size: calc(10px + 1vmax);
+    cursor: pointer;
+    border: none;
+    padding: 0.3vmax 0.7vmax;
+    margin-left: 1vmax;
+    border-radius: 0.5vmax;
+}
+
+.headerbuttonwarning:hover {
+    background-color: #ef2d2d;
+    color: ghostwhite;
+}
 
 .indivcategory {
     align-items: center;
@@ -245,7 +261,7 @@
     padding: 1vmax;
     padding-left: 1.5vmax;
     margin: 2vmax;
-    margin-top: 1vmax;
+    margin-top: 1.8vmax;
     margin-bottom: 1vmax;
     background-color:#274080;
 }
@@ -352,6 +368,9 @@ input[type="text"]
     font-size:calc(5px + 1vmax);
 }
 input[id="password"] {
+    margin-bottom: 0.8vmax;
+}
+inpit[id="username"] {
     margin-bottom: 0.4vmax;
 }
 
@@ -450,6 +469,18 @@ textarea[id="title"] {
     font-size:calc(5px + 1vmax);
     padding: 0.3vmax;
 }
+textarea[id="username"] {
+    resize: none;
+    font-size:calc(5px + 1vmax);
+    padding: 0.3vmax;
+}
+textarea[id="password"] {
+    resize: none;
+    font-size:calc(5px + 1vmax);
+    padding: 0.3vmax;
+    margin-top: 0.5vmax;
+    margin-bottom: 0.3vmax;
+}
 .editcommentform {
     margin-top: 0.8vmax;
 }
@@ -462,4 +493,24 @@ textarea[id="title"] {
     margin-right: 1vmax;
     margin-top: 0.5vmax;
     color: #1c389e;
+}
+.userinfo {
+    margin: 1vmax;
+    margin-top: 1vmax;
+    padding: 1vmax;
+    padding-top: 0;
+}
+.userwelcome {
+    font-size: calc(10px + 1.2vmax);
+    color: #274080;
+    font-weight: 500;
+    transform: translate(0%, -8%);
+    margin-right: 1vmax;
+}
+.editusertitle {
+    text-align: center;
+    padding: 1vmax;
+    font-size: calc(10px + 2vmax);
+    color: #274080;
+    font-weight: 600;
 }

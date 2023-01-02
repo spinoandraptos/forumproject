@@ -157,9 +157,9 @@ export default function Editthread() {
                 <div>
                   <form onSubmit={postdata} className="editcommentform">
                     <div className="loginbox commentbox">
-                      <textarea placeholder="Update thread title here" rows={1} cols={50} maxLength={500} minLength={1} id="title" type="commenttext" value={title} onChange={handleTitle}/>
+                      <textarea placeholder="Update thread title here (leave blank if not changing)" rows={2} cols={50} maxLength={500} minLength={1} id="title" type="commenttext" value={title} onChange={handleTitle}/>
                       <br />
-                      <textarea placeholder="Update thread description here" rows={5} cols={50} maxLength={1000} minLength={1} id="content" type="commenttext" value={content} onChange={handleContent}/>
+                      <textarea placeholder="Update thread description here (leave blank if not changing)" rows={5} cols={50} maxLength={1000} minLength={1} id="content" type="commenttext" value={content} onChange={handleContent}/>
                       <br />
                       <button className="formsubmitbutton">
                        Submit
