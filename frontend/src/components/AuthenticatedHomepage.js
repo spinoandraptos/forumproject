@@ -1,9 +1,10 @@
 import React from "react"
+import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./Authenticate";
-import { Link } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap"
+import { Link, useNavigate } from "react-router-dom";
 import "./Forum.css";
-import "./Userpage"
 
 //define the function homepage that will serve as the component rendering the homepage upon entry
 //first create the category state and state update function using the state hook useState
@@ -14,8 +15,37 @@ import "./Userpage"
 export default function AHomepage() {
 
     const [categories, setCategories] = useState([]);
-    const {userid, Fetchusername} = useContext(AuthContext);
-    const [user, setUser] = useState({})
+    const {Fetchusername} = useContext(AuthContext);
+    const [user, setUser] = useState({});
+    const [password, setPassword] = useState("");
+    const [modalOpen, setModalOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const handlePassword = (input) => {
+      setPassword(input.target.value);
+    }
+
+    function Showmodal(){
+      setModalOpen(true)
+    }
+
+    function Closemodal(){
+      setModalOpen(false)
+    }
+
+    function Redirecteditpage(input){
+      input.preventDefault();
+      console.log(password)
+      console.log(user.id)
+      console.log(user.password)
+      if(password===user.password) {
+        setModalOpen(false)
+        navigate(`/users/${user.id}`)
+      } else {
+        setModalOpen(false)
+        alert("Incorrect Password!")
+      }
+    }
 
     useEffect(()=>
       Fetchusername(),
@@ -58,6 +88,36 @@ export default function AHomepage() {
 
     return (
         <div className = "allcategories">
+          <div className="modalcontent">
+          <Modal size="lg" show={modalOpen} onHide={Closemodal}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                User Verification
+              </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+            <form className="form" onSubmit={Redirecteditpage}>
+              <div className="verifylabel">
+                <label htmlFor="password">
+                  Password:
+                </label>
+              </div>
+              <div className="verifybox">
+                <input id="password" type="password" value={password} onChange={handlePassword}/>
+                <br />
+                <button className="formsubmitbutton" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <button className="footerbutton2" onClick={Closemodal}>Close</button>
+            </Modal.Footer>
+          </Modal>
+          </div>
           <div className="herocontent">
             <div className="herotext">
               Bop Fish Nation 🦈
@@ -68,11 +128,9 @@ export default function AHomepage() {
             <div className="userwelcome">
               Welcome, {user.username}!
             </div>
-            <Link to = {`/users/${userid}`}>
-                <button className="headerbutton">
-                  Edit User Info
-                </button>
-              </Link>
+              <button className="headerbutton" onClick={Showmodal}>
+                Edit User Info
+              </button>
               <Link to = "/users/logout">
                 <button className="headerbutton">
                   Logout

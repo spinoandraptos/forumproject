@@ -134,11 +134,12 @@
     display: flex;
     justify-content: center;
     background-color:#4d66ac;
-    padding: 1vmax;
+    padding-top: 1.5vmax;
+    padding-left: 3.6vmax;
+    padding-right: 5vmax;
+    padding-bottom: 2.5vmax;
     color: ghostwhite;
     margin-bottom: 1vmax;
-    width: 50vmax;
-    height: 9vmax;
 }
 .form {
     display: flex;
@@ -150,10 +151,23 @@
     text-align: right;
     transform: translate(0%,6%);
 }
+.verifylabel {
+    padding-right: 0.5vmax;
+    margin-left: 1vmax;
+    font-size: calc(10px + 1vmax);
+    text-align: right;
+    transform: translate(0%,6%);
+}
 .loginbox {
     padding-left: 1.5vmax;
     font-size: calc(15px + 1vmax);
     transform: translate(0%,5%);
+}
+.verifybox {
+    padding-left: 1.5vmax;
+    font-size: calc(15px + 1vmax);
+    transform: translate(0%,5%);
+    margin-bottom: 0.7vmax;
 }
 .logout {
     margin: 1vmax;
@@ -176,10 +190,11 @@
     justify-content: center;
     background-color:#4d66ac;
     padding: 1vmax;
+    padding-left: 3vmax;
+    padding-right: 3.5vmax;
+    padding-bottom: 2.5vmax;
     color: ghostwhite;
     margin-bottom: 1vmax;
-    width: 50vmax;
-    height: 15vmax;
 }
 .formsubmitbutton {
     border-radius: 0.3vmax;

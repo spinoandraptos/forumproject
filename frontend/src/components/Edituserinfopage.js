@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "./Authenticate";
-import { Link, useNavigate, useParams }  from "react-router-dom";
+import { useNavigate, useParams }  from "react-router-dom";
 import { useState } from "react";
 
 export default function Edituser() {
@@ -51,7 +51,27 @@ export default function Edituser() {
         }
       }
 
-      function postdata(input){
+    function Deleteuser(){
+      fetch(`/users/${user.id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((response) => {
+        if (response.ok) {
+          localStorage.removeItem("jwt");
+          alert("User Deleted Successfully!")
+          navigate(`/`)
+          window.location.reload() 
+        } else if (response.status===401) {
+          alert("Server Does Not Detect JWT")
+        } else {
+          alert("Error: User Cannot be Deleted")
+        }
+      })
+    }
+
+    function postdata(input){
 
         if (flag == true) {
         input.preventDefault();
@@ -138,7 +158,7 @@ export default function Edituser() {
               <button className="headerbutton" onClick={Clickhomepage}>
                 Back to Homepage
               </button>
-            <button className="headerbuttonwarning">
+            <button className="headerbuttonwarning" onClick={Deleteuser}>
                 Delete User
             </button>
           </div>

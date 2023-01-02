@@ -2,7 +2,6 @@ import React from "react"
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Forum.css";
-import "./Userpage"
 
 //define the function homepage that will serve as the component rendering the homepage upon entry
 //first create the category state and state update function using the state hook useState
