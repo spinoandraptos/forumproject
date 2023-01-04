@@ -143,7 +143,7 @@ export default function Editthread() {
           </div>
         </header>
         <div className="editcomment">
-          <div className="comments2">
+          <div className="updatethread">
             <div className="comment" key={thread.id}>
               <div className="threadtitle2">
                 {thread.title}
@@ -153,21 +153,17 @@ export default function Editthread() {
               </div>
             </div>
             <div>
-              <div>
-                <div>
-                  <form onSubmit={postdata} className="editcommentform">
-                    <div className="loginbox commentbox">
-                      <textarea placeholder="Update thread title here (leave blank if not changing)" rows={2} cols={50} maxLength={500} minLength={1} id="title" type="commenttext" value={title} onChange={handleTitle}/>
-                      <br />
-                      <textarea placeholder="Update thread description here (leave blank if not changing)" rows={5} cols={50} maxLength={1000} minLength={1} id="content" type="commenttext" value={content} onChange={handleContent}/>
-                      <br />
-                      <button className="formsubmitbutton">
-                       Submit
-                      </button>
-                    </div>
-                  </form>
+              <form onSubmit={postdata} className="editcommentform">
+                <div className="loginbox commentbox">
+                  <textarea placeholder="Update thread title here (leave blank if not changing)" rows={2} cols={50} maxLength={500} minLength={1} id="title" type="commenttext" value={title} onChange={handleTitle}/>
+                  <br />
+                  <textarea placeholder="Update thread description here (leave blank if not changing)" rows={5} cols={50} maxLength={1000} minLength={1} id="content" type="commenttext" value={content} onChange={handleContent}/>
+                  <br />
+                  <button className="formsubmitbutton">
+                    Submit
+                  </button>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

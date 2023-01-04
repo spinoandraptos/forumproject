@@ -2,7 +2,7 @@ import React from "react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./Authenticate";
-import { Modal, Button } from "react-bootstrap"
+import { Modal } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom";
 import "./Forum.css";
 
@@ -17,12 +17,18 @@ export default function AHomepage() {
     const [categories, setCategories] = useState([]);
     const {Fetchusername} = useContext(AuthContext);
     const [user, setUser] = useState({});
+    const [thread, setThread] = useState({});
+    const [search, setSearch] = useState("");
     const [password, setPassword] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
 
     const handlePassword = (input) => {
       setPassword(input.target.value);
+    }
+
+    const handleSearch = (input) => {
+      setSearch(input.target.value);
     }
 
     function Showmodal(){
@@ -35,9 +41,6 @@ export default function AHomepage() {
 
     function Redirecteditpage(input){
       input.preventDefault();
-      console.log(password)
-      console.log(user.id)
-      console.log(user.password)
       if(password===user.password) {
         setModalOpen(false)
         navigate(`/users/${user.id}`)
@@ -46,6 +49,40 @@ export default function AHomepage() {
         alert("Incorrect Password!")
       }
     }
+
+    function postdata(){
+      console.log(thread)
+      if(thread.id && thread.categoryid){
+        navigate(`/${thread.categoryid}/threads/${thread.id}/comments`)
+      }
+      else {
+        alert("Error: Thread Cannot be Found (Remember to Input Full Title)")
+      }
+    }
+
+    useEffect(()=>{
+      const delay = setTimeout(() => {
+      fetch(`http://localhost:3000/search`, {
+      method: "POST",
+      credentials: "include",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Title: search,
+      })
+    })
+    .then((response) => {
+      if (response.ok) {
+        console.log("Response:" + response)
+        return (response.json())
+      }
+    })
+    .then((threadinfo) => {
+      setThread(threadinfo)
+    })
+    }, 500);
+
+    return () => clearTimeout(delay);
+    }, [search])
 
     useEffect(()=>
       Fetchusername(),
@@ -128,6 +165,19 @@ export default function AHomepage() {
             <div className="userwelcome">
               Welcome, {user.username}!
             </div>
+            <form onSubmit={postdata}>
+              <input
+                type="search"
+                placeholder="Search Thread by Title"
+                id="searchbar"
+                size={25}
+                value={search}
+                onChange={handleSearch}
+              />
+              <button className="searchbutton">
+                🔍
+              </button>
+            </form>
               <button className="headerbutton" onClick={Showmodal}>
                 Edit User Info
               </button>

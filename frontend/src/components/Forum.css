@@ -388,7 +388,11 @@ input[id="password"] {
 inpit[id="username"] {
     margin-bottom: 0.4vmax;
 }
-
+input[id="searchbar"] {
+    margin-bottom: 0.4vmax;
+    font-size:calc(5px + 0.7vmax);
+    margin-left: 0.8vmax;
+}
 input[type="password"]
 {
     font-size:calc(5px + 1vmax);
@@ -413,6 +417,12 @@ input[type="password"]
 .comments2 {
     margin: 1vmax;
     margin-top: 4vmax;
+    padding: 1vmax;
+    padding-top: 0;
+}
+.updatethread {
+    margin: 1vmax;
+    margin-top: 1.5vmax;
     padding: 1vmax;
     padding-top: 0;
 }
@@ -528,4 +538,47 @@ textarea[id="password"] {
     font-size: calc(10px + 2vmax);
     color: #274080;
     font-weight: 600;
+}
+.warning {
+    padding: 1vmax;
+    font-size: calc(10px + 0.7vmax);
+}
+.warningbutton {
+    background-color: #ef2d2d;
+    border-color: #ef2d2d;
+    color: ghostwhite;
+    border-radius: 0.4vmax;
+    padding: 0.4vmax;
+    font-size: calc(8px + 0.6vmax);
+    margin-top: 1vmax;
+    cursor: pointer;
+}
+.warningbutton2 {
+    background-color: #ef2d2d;
+    border-color: #ef2d2d;
+    color: ghostwhite;
+    border-radius: 0.4vmax;
+    padding: 0.4vmax;
+    margin-right: 1.2vmax;
+    font-size: calc(10px + 0.8vmax);
+
+    cursor: pointer;
+}
+.warningbutton:hover {
+    background-color: #a51717;
+    border-color: #a51717;
+    color: ghostwhite;
+}
+.warningbutton2:hover {
+    background-color: #a51717;
+    border-color: #a51717;
+    color: ghostwhite;
+}
+.searchbutton {
+    margin-bottom: 0.35vmax;
+    font-size: calc(5px + 0.7vmax);
+    margin-right: 0.3vmax;
+    background-color: ghostwhite;
+    border-color: gainsboro;
+    margin-left: 0.2vmax;
 }

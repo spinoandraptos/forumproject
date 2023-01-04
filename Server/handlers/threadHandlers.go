@@ -46,6 +46,19 @@ func ViewThread(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func SearchThread(w http.ResponseWriter, r *http.Request) {
+
+	var post models.Thread
+	json.NewDecoder(r.Body).Decode(&post)
+
+	thread := database.DB.QueryRow("SELECT * FROM threads WHERE threads.Title = $1", post.Title)
+	err := thread.Scan(&post.ID, &post.Title, &post.Content, &post.AuthorID, &post.CategoryID, &post.CreatedAt, &post.UpdatedAt)
+	helper.Catch(err)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(post)
+}
+
 func CreateThread(w http.ResponseWriter, r *http.Request) {
 
 	var post models.Thread

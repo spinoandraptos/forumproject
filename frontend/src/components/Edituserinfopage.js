@@ -2,15 +2,34 @@ import React, { useContext, useEffect } from "react";
 import { AuthContext } from "./Authenticate";
 import { useNavigate, useParams }  from "react-router-dom";
 import { useState } from "react";
+import { Modal } from "react-bootstrap"
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Edituser() {
    
     const navigate = useNavigate();
-    const {categoryid, threadid} = useParams();
     const [user, setUser] = useState({});
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modal, setModal] = useState(0);
     const {flag, Fetchusername} = useContext(AuthContext);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    function Closemodal(){
+      setModalOpen(false)
+    }
+
+    function Usemodal1(input){
+      input.preventDefault();
+      setModalOpen(true)
+      setModal(1)
+    }
+
+    function Usemodal2(input){
+      input.preventDefault();
+      setModalOpen(true)
+      setModal(2)
+    }
 
     const handleUsername = (input) => {
       setUsername(input.target.value);
@@ -51,7 +70,10 @@ export default function Edituser() {
         }
       }
 
-    function Deleteuser(){
+    function Deleteuser(input){
+
+      input.preventDefault();
+
       fetch(`/users/${user.id}`, {
         method: "DELETE",
         credentials: "include",
@@ -59,6 +81,7 @@ export default function Edituser() {
       })
       .then((response) => {
         if (response.ok) {
+          Closemodal()
           localStorage.removeItem("jwt");
           alert("User Deleted Successfully!")
           navigate(`/`)
@@ -72,10 +95,10 @@ export default function Edituser() {
     }
 
     function postdata(input){
+        
+      input.preventDefault();
 
         if (flag == true) {
-        input.preventDefault();
-
         if(username === ""){
           fetch(`/users/${user.id}/password`, {
             method: "PUT",
@@ -87,6 +110,7 @@ export default function Edituser() {
           })
           .then((response) => {
             if (response.ok) {
+              Closemodal()
               console.log("Response:" + response)
               alert("Password Updated Successfully!")
               navigate(`/authenticated`)
@@ -107,6 +131,7 @@ export default function Edituser() {
         })
         .then((response) => {
           if (response.ok) {
+            Closemodal()
             console.log("Response:" + response)
             alert("Username Updated Successfully!")
             localStorage.setItem("jwt", JSON.stringify(username))
@@ -141,6 +166,7 @@ export default function Edituser() {
         })
       }
     } else {
+        Closemodal()
         alert("Please Login First")
         navigate("/users/login")
       }
@@ -148,6 +174,53 @@ export default function Edituser() {
     
     return (
         <div>
+          
+          <div className="modalcontent">
+          <Modal size="lg" show={modalOpen} onHide={Closemodal}>
+            {modal===1 && (
+              <>
+              <Modal.Header closeButton>
+              <Modal.Title>
+                Please Confirm
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="warning">
+                <div>
+                  You are deleting your user account. Please double confirm.
+                </div>
+                <button onClick={Deleteuser} className="warningbutton">
+                  Confirm
+                </button>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <button className="footerbutton2" onClick={Closemodal}>Abort Deletion</button>
+            </Modal.Footer>
+            </>
+            )}
+            {modal===2  && (
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title>
+                    Please Confirm Info Update
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="warning">
+                    <button onClick={postdata} className="warningbutton2">
+                      Confirm
+                    </button>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer>
+                  <button className="footerbutton2" onClick={Closemodal}>Abort Update</button>
+                </Modal.Footer>
+              </>
+            )}
+          </Modal>
+          </div>
+
         <div className="herocontent">
           <div className="herotext">
             Bop Fish Nation 🦈 
@@ -158,7 +231,7 @@ export default function Edituser() {
               <button className="headerbutton" onClick={Clickhomepage}>
                 Back to Homepage
               </button>
-            <button className="headerbuttonwarning" onClick={Deleteuser}>
+            <button className="headerbuttonwarning" onClick={Usemodal1}>
                 Delete User
             </button>
           </div>
@@ -166,9 +239,9 @@ export default function Edituser() {
         <div className="editcomment">
           <div className="userinfo">
             <div className="editusertitle">
-                Edit User Info
+                Update User Info
             </div>
-            <form onSubmit={postdata} className="editcommentform">
+            <form onSubmit={Usemodal2} className="editcommentform">
                 <div className="loginbox commentbox">
                     <input id="username" placeholder="Update Username Here (Leave blank if no changes)" size={50} type="text" value={username} onChange={handleUsername} />
                     <br />

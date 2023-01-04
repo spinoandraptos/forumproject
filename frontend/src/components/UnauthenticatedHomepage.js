@@ -1,6 +1,6 @@
 import React from "react"
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Forum.css";
 
 //define the function homepage that will serve as the component rendering the homepage upon entry
@@ -12,6 +12,46 @@ import "./Forum.css";
 export default function NHomepage() {
 
     const [categories, setCategories] = useState([]);
+    const [thread, setThread] = useState({});
+    const [search, setSearch] = useState("");
+    const navigate = useNavigate();
+
+    const handleSearch = (input) => {
+      setSearch(input.target.value);
+    }
+
+    function postdata(input){
+      input.preventDefault();
+      if(thread.id && thread.categoryid){
+        navigate(`/${thread.categoryid}/threads/${thread.id}/comments`)
+      }
+      else {
+        alert("Error: Thread Cannot be Found (Remember to Input Full Title)")
+      }
+    }
+
+    useEffect(()=>{
+      const delay = setTimeout(() => {
+      fetch(`http://localhost:3000/search`, {
+      method: "POST",
+      credentials: "include",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Title: search,
+      })
+    })
+    .then((response) => {
+      if (response.ok) {
+        return (response.json())
+      }
+    })
+    .then((threadinfo) => {
+      setThread(threadinfo)
+    })
+    }, 500);
+
+    return () => clearTimeout(delay);
+    }, [search])
 
     useEffect(() => {
         fetch("http://localhost:3000/", {
@@ -38,6 +78,19 @@ export default function NHomepage() {
           </div>
           <header id = "homepageheader">
             <div className = "headerlinks">
+            <form onSubmit={postdata}>
+              <input
+                type="search"
+                placeholder="Search Thread by Title"
+                id="searchbar"
+                size={25}
+                value={search}
+                onChange={handleSearch}
+              />
+              <button className="searchbutton">
+                🔍
+              </button>
+            </form>
               <Link to = "/users/signup">
                 <button className="headerbutton">
                   Register
