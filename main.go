@@ -18,8 +18,10 @@ package main
 
 import (
 	"database/sql"
+	"embed"
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 
@@ -34,6 +36,12 @@ import (
 	"github.com/spinoandraptos/forumproject/Server/models"
 )
 
+// embed the react build files in main.go by specifying the directory where the build files are located
+// then store the entire filesystem in variable named "reactfiles" which functions as a virtual filesystem
+
+//go:embed frontend/build
+var reactfiles embed.FS
+
 var authtoken *jwtauth.JWTAuth
 
 const secretkey = "123abc"
@@ -44,6 +52,7 @@ const secretkey = "123abc"
 // db.Ping will then attempt to open a connection with the database
 // if error occurs, error message will be printed
 func init() {
+
 	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", database.Host, database.Port, database.User, database.Password, database.Dbname)
@@ -65,6 +74,14 @@ if the URL path matches the format of /xxx/yyy, then the corresponding function 
 */
 
 func main() {
+
+	//since all the files are located under frontend/build/static
+	//we will serve the subdirectory of HOST/frontend/build/static directly using "filesystem" to avoid needing to access HOST/frontend/build/...
+	//can access HOST/... directly
+	filesystem, err := fs.Sub(reactfiles, "frontend/build")
+	helper.Catch(err)
+	newfilesystem := http.FS(filesystem)
+
 	//creation of a new router of name "router"
 	router := chi.NewRouter()
 
@@ -89,42 +106,42 @@ func main() {
 	//route handler functions are defined under the respective handler files
 	//it is to be noted that the handlers below are merely functions and do not implement the Handler interface
 	//this is because using merely functions is clearer and simpler given we are not doing complex operations
-
 	router.Group(func(r chi.Router) {
-		r.Post("/", UserLogin)
-		r.Post("/users/signup", handlers.CreateUser)
-		r.Get("/", handlers.ViewCategories)
-		r.Get("/{categoryid}", handlers.ViewCategory)
-		r.Get("/{categoryid}/threads", handlers.ViewThreads)
-		r.Get("/{categoryid}/threads/{threadid}", handlers.ViewThread)
-		r.Get("/{categoryid}/threads/{threadid}/comments", handlers.ViewComments)
-		r.Get("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
+		r.Handle("/", http.FileServer(newfilesystem))
+		r.Post("/api/login", UserLogin)
+		r.Post("/api/search", handlers.SearchThread)
+		r.Post("/api/users/signup", handlers.CreateUser)
+		r.Get("/api/categories", handlers.ViewCategories)
+		r.Get("/api/{categoryid}", handlers.ViewCategory)
+		r.Get("/api/{categoryid}/threads", handlers.ViewThreads)
+		r.Get("/api/{categoryid}/threads/{threadid}", handlers.ViewThread)
+		r.Get("/api/{categoryid}/threads/{threadid}/comments", handlers.ViewComments)
+		r.Get("/api/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.ViewComment)
 	})
 
 	router.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(authtoken))
 		r.Use(jwtauth.Authenticator)
-		r.Post("/users/{username}", handlers.Viewuser)
-		r.Post("/users/{username}/id", handlers.ViewUserID)
-		r.Post("/users/logout", UserLogout)
-		r.Put("/users/{userid}", handlers.UpdateUser)
-		r.Put("/users/{userid}/username", handlers.UpdateUsername)
-		r.Put("/users/{userid}/password", handlers.UpdateUserpassword)
-		r.Delete("/users/{userid}", handlers.DeleteUser)
-		r.Post("/search", handlers.SearchThread)
-		r.Post("/{categoryid}/threads", handlers.CreateThread)
-		r.Post("/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
-		r.Put("/{categoryid}/threads/{threadid}", handlers.UpdateThread)
-		r.Put("/{categoryid}/threads/{threadid}/title", handlers.UpdateThreadTitle)
-		r.Put("/{categoryid}/threads/{threadid}/content", handlers.UpdateThreadContent)
-		r.Put("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.UpdateComment)
-		r.Delete("/{categoryid}/threads/{threadid}", handlers.DeleteThread)
-		r.Delete("/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
+		r.Post("/api/users/{username}", handlers.Viewuser)
+		r.Post("/api/users/{username}/id", handlers.ViewUserID)
+		r.Post("/api/users/logout", UserLogout)
+		r.Put("/api/users/{userid}", handlers.UpdateUser)
+		r.Put("/api/users/{userid}/username", handlers.UpdateUsername)
+		r.Put("/api/users/{userid}/password", handlers.UpdateUserpassword)
+		r.Delete("/api/users/{userid}", handlers.DeleteUser)
+		r.Post("/api/{categoryid}/threads", handlers.CreateThread)
+		r.Post("/api/{categoryid}/threads/{threadid}/comments", handlers.CreateComment)
+		r.Put("/api/{categoryid}/threads/{threadid}", handlers.UpdateThread)
+		r.Put("/api/{categoryid}/threads/{threadid}/title", handlers.UpdateThreadTitle)
+		r.Put("/api/{categoryid}/threads/{threadid}/content", handlers.UpdateThreadContent)
+		r.Put("/api/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.UpdateComment)
+		r.Delete("/api/{categoryid}/threads/{threadid}", handlers.DeleteThread)
+		r.Delete("/api/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
 	})
 
 	//use router to start the server
 	//if there is error starting server (error value is not nil), error message is printed
-	err := http.ListenAndServe(":3000", router)
+	err = http.ListenAndServe(":3000", router)
 	helper.Catch(err)
 }
 

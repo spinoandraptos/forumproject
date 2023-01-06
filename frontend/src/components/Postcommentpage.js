@@ -20,7 +20,7 @@ export default function Createcomment() {
   [])
 
   useEffect(() => {
-    fetch(`http://localhost:3000/${categoryid}/threads/${threadid}`, {
+    fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}`, {
             method: "GET",
             credentials: "include",
         })
@@ -36,9 +36,9 @@ export default function Createcomment() {
 
   function postdata(input){
 
-    if (flag == true) {
+    if (flag === true) {
     input.preventDefault();
-    fetch(`/${categoryid}/threads/${threadid}/comments`, {
+    fetch(`/api/${categoryid}/threads/${threadid}/comments`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

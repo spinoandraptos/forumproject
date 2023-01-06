@@ -21,7 +21,7 @@ export default function Editcomment() {
 
     useEffect(()=>{
       console.log(categoryid, threadid, commentid)
-      fetch(`http://localhost:3000/${categoryid}/threads/${threadid}/comments/${commentid}`, {
+      fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
         method: "GET",
         credentials: "include",
     })
@@ -38,7 +38,7 @@ export default function Editcomment() {
   },[])
 
     function Clickhomepage(){
-        if (flag == true) {
+        if (flag === true) {
           navigate("/authenticated")
         } else {
           navigate("/")
@@ -47,9 +47,9 @@ export default function Editcomment() {
 
       function postdata(input){
 
-        if (flag == true) {
+        if (flag === true) {
         input.preventDefault();
-        fetch(`/${categoryid}/threads/${threadid}/comments/${commentid}`, {
+        fetch(`/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },

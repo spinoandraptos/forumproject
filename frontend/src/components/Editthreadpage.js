@@ -26,7 +26,7 @@ export default function Editthread() {
 
     useEffect(()=>{
       console.log(categoryid, threadid)
-      fetch(`http://localhost:3000/${categoryid}/threads/${threadid}`, {
+      fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}`, {
         method: "GET",
         credentials: "include",
     })
@@ -43,7 +43,7 @@ export default function Editthread() {
   },[])
 
     function Clickhomepage(){
-        if (flag == true) {
+        if (flag === true) {
           navigate("/authenticated")
         } else {
           navigate("/")
@@ -52,11 +52,11 @@ export default function Editthread() {
 
       function postdata(input){
 
-        if (flag == true) {
+        if (flag === true) {
         input.preventDefault();
 
         if(title === ""){
-          fetch(`/${categoryid}/threads/${threadid}/content`, {
+          fetch(`/api/${categoryid}/threads/${threadid}/content`, {
             method: "PUT",
             credentials: "include",
             headers: { 'Content-Type': 'application/json' },
@@ -76,7 +76,7 @@ export default function Editthread() {
             }
           })
       } else if (content === ""){
-        fetch(`/${categoryid}/threads/${threadid}/title`, {
+        fetch(`/api/${categoryid}/threads/${threadid}/title`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ export default function Editthread() {
           }
         })
       } else {
-        fetch(`/${categoryid}/threads/${threadid}`, {
+        fetch(`/api/${categoryid}/threads/${threadid}`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },

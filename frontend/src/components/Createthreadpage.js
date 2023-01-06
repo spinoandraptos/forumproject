@@ -25,9 +25,9 @@ export default function Createthread() {
   function postdata(input){
     input.preventDefault();
 
-    if (flag == true) {
+    if (flag === true) {
   
-     fetch(`http://localhost:3000/${categoryid}/threads`, {
+     fetch(`http://localhost:3000/api/${categoryid}/threads`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

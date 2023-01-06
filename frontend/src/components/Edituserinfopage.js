@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "./Authenticate";
-import { useNavigate, useParams }  from "react-router-dom";
+import { useNavigate }  from "react-router-dom";
 import { useState } from "react";
 import { Modal } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -44,7 +44,7 @@ export default function Edituser() {
     [])
 
     useEffect(()=>{
-      fetch(`http://localhost:3000/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
+      fetch(`http://localhost:3000/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -63,7 +63,7 @@ export default function Edituser() {
   },[])
 
     function Clickhomepage(){
-        if (flag == true) {
+        if (flag === true) {
           navigate("/authenticated")
         } else {
           navigate("/")
@@ -74,7 +74,7 @@ export default function Edituser() {
 
       input.preventDefault();
 
-      fetch(`/users/${user.id}`, {
+      fetch(`/api/users/${user.id}`, {
         method: "DELETE",
         credentials: "include",
         headers: { 'Content-Type': 'application/json' },
@@ -98,9 +98,9 @@ export default function Edituser() {
         
       input.preventDefault();
 
-        if (flag == true) {
+        if (flag === true) {
         if(username === ""){
-          fetch(`/users/${user.id}/password`, {
+          fetch(`/api/users/${user.id}/password`, {
             method: "PUT",
             credentials: "include",
             headers: { 'Content-Type': 'application/json' },
@@ -121,7 +121,7 @@ export default function Edituser() {
             }
           })
       } else if (password === ""){
-        fetch(`/users/${user.id}/username`, {
+        fetch(`/api/users/${user.id}/username`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },
@@ -143,7 +143,7 @@ export default function Edituser() {
           }
         })
       } else {
-        fetch(`/users/${user.id}`, {
+        fetch(`/api/users/${user.id}`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },

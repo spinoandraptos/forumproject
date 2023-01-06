@@ -18,7 +18,7 @@ export default function Registerpage() {
 
   function postdata(input){
     input.preventDefault();
-    fetch(`http://localhost:3000/users/signup`, {
+    fetch(`http://localhost:3000/api/users/signup`, {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

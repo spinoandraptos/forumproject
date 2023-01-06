@@ -19,11 +19,11 @@ export default function Threadspage() {
 
     useEffect(() => {
       Promise.all([
-        fetch(`http://localhost:3000/${categoryid}`, {
+        fetch(`http://localhost:3000/api/${categoryid}`, {
             method: "GET",
             credentials: "include",
         }),
-        fetch(`http://localhost:3000/${categoryid}/threads`, {
+        fetch(`http://localhost:3000/api/${categoryid}/threads`, {
             method: "GET",
             credentials: "include",
         })
@@ -42,7 +42,7 @@ export default function Threadspage() {
     }, []);
 
     function Clickhomepage(){
-      if (flag == true) {
+      if (flag === true) {
         navigate("/authenticated")
       } else {
         navigate("/")
@@ -50,7 +50,7 @@ export default function Threadspage() {
     }
 
     function Clickpostthread(){
-      if (flag == true) {
+      if (flag === true) {
         navigate(`/${category.id}/threads/create`)
       } else {
         alert("Please Login First")
@@ -58,7 +58,7 @@ export default function Threadspage() {
     }
 
     function Clickdeletethread(value){
-      fetch(`/${categoryid}/threads/${value}`, {
+      fetch(`/api/${categoryid}/threads/${value}`, {
         method: "DELETE",
         headers: { 'Content-Type': 'application/json' }
       })
