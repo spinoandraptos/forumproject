@@ -18,11 +18,11 @@ export default function Threadpage() {
 
     useEffect(() => {
       Promise.all([
-        fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}`, {
+        fetch(`/api/${categoryid}/threads/${threadid}`, {
             method: "GET",
             credentials: "include",
         }),
-        fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}/comments`, {
+        fetch(`/api/${categoryid}/threads/${threadid}/comments`, {
             method: "GET",
             credentials: "include",
         })

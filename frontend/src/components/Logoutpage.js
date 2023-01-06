@@ -7,7 +7,7 @@ export default function Logooutpage() {
 
   function postdata(input){
     input.preventDefault();
-    fetch(`http://localhost:3000/api/users/logout`, {
+    fetch(`/api/users/logout`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

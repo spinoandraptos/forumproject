@@ -62,7 +62,7 @@ export default function AHomepage() {
 
     useEffect(()=>{
       const delay = setTimeout(() => {
-      fetch(`http://localhost:3000/api/search`, {
+      fetch(`/api/search`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -89,7 +89,7 @@ export default function AHomepage() {
     [])
 
     useEffect(()=>{
-      fetch(`http://localhost:3000/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
+      fetch(`/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -108,7 +108,7 @@ export default function AHomepage() {
     },[])
 
     useEffect(() => {
-        fetch("http://localhost:3000/api/categories", {
+        fetch("/api/categories", {
             method: "GET",
             credentials: "include",
         })

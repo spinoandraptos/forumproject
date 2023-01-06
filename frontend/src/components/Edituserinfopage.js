@@ -44,7 +44,7 @@ export default function Edituser() {
     [])
 
     useEffect(()=>{
-      fetch(`http://localhost:3000/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
+      fetch(`/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

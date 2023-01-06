@@ -27,7 +27,7 @@ export default function Createthread() {
 
     if (flag === true) {
   
-     fetch(`http://localhost:3000/api/${categoryid}/threads`, {
+     fetch(`/api/${categoryid}/threads`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

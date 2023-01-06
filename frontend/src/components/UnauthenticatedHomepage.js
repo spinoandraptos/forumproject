@@ -32,7 +32,7 @@ export default function NHomepage() {
 
     useEffect(()=>{
       const delay = setTimeout(() => {
-      fetch(`http://localhost:3000/api/search`, {
+      fetch(`/api/search`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -54,7 +54,7 @@ export default function NHomepage() {
     }, [search])
 
     useEffect(() => {
-        fetch("http://localhost:3000/api/categories", {
+        fetch("/api/categories", {
             method: "GET",
             credentials:"include"
         })

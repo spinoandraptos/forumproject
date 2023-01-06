@@ -54,7 +54,7 @@ const secretkey = "123abc"
 func init() {
 	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	var err error
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", database.Host, database.Port, database.User, database.Password, database.Dbname)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", database.Host, database.Port, database.User, database.Password, database.Dbname)
 	database.DB, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
 		log.Fatal(err)
@@ -80,7 +80,6 @@ func main() {
 	filesystem, err := fs.Sub(reactfiles, "frontend/build")
 	helper.Catch(err)
 	newfilesystem := http.FS(filesystem)
-	log.Println(filesystem.Open("static"))
 
 	//creation of a new router of name "router"
 	router := chi.NewRouter()
@@ -92,7 +91,7 @@ func main() {
 	//using the cors middleware to perform preflight CORS checks on the server side
 	//this ensures that the server only permits browser requests fulfilling the below requirements which reduces potential misuse
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3001"},
+		AllowedOrigins:   []string{"https://bopfishforum.onrender.com"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Set-Cookie", "Content-Type", "Authorisation", "Accept", "X-CSRF-Token", "Cookie"},
 		ExposedHeaders:   []string{"Link"},

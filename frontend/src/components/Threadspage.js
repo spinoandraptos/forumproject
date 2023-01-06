@@ -19,11 +19,11 @@ export default function Threadspage() {
 
     useEffect(() => {
       Promise.all([
-        fetch(`http://localhost:3000/api/${categoryid}`, {
+        fetch(`/api/${categoryid}`, {
             method: "GET",
             credentials: "include",
         }),
-        fetch(`http://localhost:3000/api/${categoryid}/threads`, {
+        fetch(`/api/${categoryid}/threads`, {
             method: "GET",
             credentials: "include",
         })

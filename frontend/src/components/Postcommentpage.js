@@ -20,7 +20,7 @@ export default function Createcomment() {
   [])
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}`, {
+    fetch(`/api/${categoryid}/threads/${threadid}`, {
             method: "GET",
             credentials: "include",
         })

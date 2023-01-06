@@ -17,7 +17,7 @@ export default function Loginpage() {
 
     function postdata(input){
       input.preventDefault();
-      fetch(`http://localhost:3000/api/login`, {
+      fetch(`/api/login`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         credentials: "include",

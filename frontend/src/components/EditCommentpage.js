@@ -21,7 +21,7 @@ export default function Editcomment() {
 
     useEffect(()=>{
       console.log(categoryid, threadid, commentid)
-      fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
+      fetch(`/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
         method: "GET",
         credentials: "include",
     })

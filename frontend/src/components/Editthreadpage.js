@@ -26,7 +26,7 @@ export default function Editthread() {
 
     useEffect(()=>{
       console.log(categoryid, threadid)
-      fetch(`http://localhost:3000/api/${categoryid}/threads/${threadid}`, {
+      fetch(`/api/${categoryid}/threads/${threadid}`, {
         method: "GET",
         credentials: "include",
     })
