@@ -24,6 +24,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -140,7 +141,8 @@ func main() {
 
 	//use router to start the server
 	//if there is error starting server (error value is not nil), error message is printed
-	err = http.ListenAndServe(":3000", router)
+	port := os.Getenv("PORT")
+	err = http.ListenAndServe(port, router)
 	helper.Catch(err)
 }
 
