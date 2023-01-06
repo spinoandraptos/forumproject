@@ -52,7 +52,6 @@ const secretkey = "123abc"
 // db.Ping will then attempt to open a connection with the database
 // if error occurs, error message will be printed
 func init() {
-
 	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", database.Host, database.Port, database.User, database.Password, database.Dbname)
@@ -81,6 +80,7 @@ func main() {
 	filesystem, err := fs.Sub(reactfiles, "frontend/build")
 	helper.Catch(err)
 	newfilesystem := http.FS(filesystem)
+	log.Println(filesystem.Open("static"))
 
 	//creation of a new router of name "router"
 	router := chi.NewRouter()
