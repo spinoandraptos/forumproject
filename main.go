@@ -91,7 +91,7 @@ func main() {
 	//using the cors middleware to perform preflight CORS checks on the server side
 	//this ensures that the server only permits browser requests fulfilling the below requirements which reduces potential misuse
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://bopfishforum.onrender.com", "https://bopfishforum.herokuapp.com/"},
+		AllowedOrigins:   []string{"https://bopfishforum.onrender.com"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Set-Cookie", "Content-Type", "Authorisation", "Accept", "X-CSRF-Token", "Cookie"},
 		ExposedHeaders:   []string{"Link"},
