@@ -19,11 +19,11 @@ export default function Threadspage() {
 
     useEffect(() => {
       Promise.all([
-        fetch(`/api/${categoryid}`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}`, {
             method: "GET",
             credentials: "include",
         }),
-        fetch(`/api/${categoryid}/threads`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads`, {
             method: "GET",
             credentials: "include",
         })
@@ -58,7 +58,7 @@ export default function Threadspage() {
     }
 
     function Clickdeletethread(value){
-      fetch(`/api/${categoryid}/threads/${value}`, {
+      fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${value}`, {
         method: "DELETE",
         headers: { 'Content-Type': 'application/json' }
       })

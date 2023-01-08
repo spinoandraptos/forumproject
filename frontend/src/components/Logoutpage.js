@@ -7,7 +7,7 @@ export default function Logooutpage() {
 
   function postdata(input){
     input.preventDefault();
-    fetch(`/api/users/logout`, {
+    fetch(`https://bopfishforum2.onrender.com/api/users/logout`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

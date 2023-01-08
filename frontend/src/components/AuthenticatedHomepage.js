@@ -62,7 +62,7 @@ export default function AHomepage() {
 
     useEffect(()=>{
       const delay = setTimeout(() => {
-      fetch(`/api/search`, {
+      fetch(`https://bopfishforum2.onrender.com/api/search`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -89,7 +89,7 @@ export default function AHomepage() {
     [])
 
     useEffect(()=>{
-      fetch(`/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
+      fetch(`https://bopfishforum2.onrender.com/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -108,7 +108,7 @@ export default function AHomepage() {
     },[])
 
     useEffect(() => {
-        fetch("/api/categories", {
+        fetch("https://bopfishforum2.onrender.com/api/categories", {
             method: "GET",
             credentials: "include",
         })

@@ -18,11 +18,11 @@ export default function Threadpage() {
 
     useEffect(() => {
       Promise.all([
-        fetch(`/api/${categoryid}/threads/${threadid}`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}`, {
             method: "GET",
             credentials: "include",
         }),
-        fetch(`/api/${categoryid}/threads/${threadid}/comments`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/comments`, {
             method: "GET",
             credentials: "include",
         })
@@ -57,7 +57,7 @@ export default function Threadpage() {
     }
 
     function Clickdeletecomment(value){
-        fetch(`/api/${categoryid}/threads/${threadid}/comments/${value}`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/comments/${value}`, {
           method: "DELETE",
           headers: { 'Content-Type': 'application/json' }
         })

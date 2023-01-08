@@ -26,7 +26,7 @@ export default function Editthread() {
 
     useEffect(()=>{
       console.log(categoryid, threadid)
-      fetch(`/api/${categoryid}/threads/${threadid}`, {
+      fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}`, {
         method: "GET",
         credentials: "include",
     })
@@ -56,7 +56,7 @@ export default function Editthread() {
         input.preventDefault();
 
         if(title === ""){
-          fetch(`/api/${categoryid}/threads/${threadid}/content`, {
+          fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/content`, {
             method: "PUT",
             credentials: "include",
             headers: { 'Content-Type': 'application/json' },
@@ -76,7 +76,7 @@ export default function Editthread() {
             }
           })
       } else if (content === ""){
-        fetch(`/api/${categoryid}/threads/${threadid}/title`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/title`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ export default function Editthread() {
           }
         })
       } else {
-        fetch(`/api/${categoryid}/threads/${threadid}`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },

@@ -27,7 +27,7 @@ export default function Createthread() {
 
     if (flag === true) {
   
-     fetch(`/api/${categoryid}/threads`, {
+     fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },

@@ -17,7 +17,7 @@ export default function Loginpage() {
 
     function postdata(input){
       input.preventDefault();
-      fetch(`/api/login`, {
+      fetch(`https://bopfishforum2.onrender.com/api/login`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         credentials: "include",

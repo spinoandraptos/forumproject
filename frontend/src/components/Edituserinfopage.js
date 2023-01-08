@@ -44,7 +44,7 @@ export default function Edituser() {
     [])
 
     useEffect(()=>{
-      fetch(`/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
+      fetch(`https://bopfishforum2.onrender.com/api/users/${JSON.parse(localStorage.getItem("jwt"))}`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -74,7 +74,7 @@ export default function Edituser() {
 
       input.preventDefault();
 
-      fetch(`/api/users/${user.id}`, {
+      fetch(`https://bopfishforum2.onrender.com/api/users/${user.id}`, {
         method: "DELETE",
         credentials: "include",
         headers: { 'Content-Type': 'application/json' },
@@ -100,7 +100,7 @@ export default function Edituser() {
 
         if (flag === true) {
         if(username === ""){
-          fetch(`/api/users/${user.id}/password`, {
+          fetch(`https://bopfishforum2.onrender.com/api/users/${user.id}/password`, {
             method: "PUT",
             credentials: "include",
             headers: { 'Content-Type': 'application/json' },
@@ -121,7 +121,7 @@ export default function Edituser() {
             }
           })
       } else if (password === ""){
-        fetch(`/api/users/${user.id}/username`, {
+        fetch(`https://bopfishforum2.onrender.com/api/users/${user.id}/username`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },
@@ -143,7 +143,7 @@ export default function Edituser() {
           }
         })
       } else {
-        fetch(`/api/users/${user.id}`, {
+        fetch(`https://bopfishforum2.onrender.com/api/users/${user.id}`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },

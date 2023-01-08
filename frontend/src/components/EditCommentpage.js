@@ -21,7 +21,7 @@ export default function Editcomment() {
 
     useEffect(()=>{
       console.log(categoryid, threadid, commentid)
-      fetch(`/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
+      fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
         method: "GET",
         credentials: "include",
     })
@@ -49,7 +49,7 @@ export default function Editcomment() {
 
         if (flag === true) {
         input.preventDefault();
-        fetch(`/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
+        fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/comments/${commentid}`, {
           method: "PUT",
           credentials: "include",
           headers: { 'Content-Type': 'application/json' },

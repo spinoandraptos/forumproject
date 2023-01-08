@@ -18,7 +18,7 @@ export default function Registerpage() {
 
   function postdata(input){
     input.preventDefault();
-    fetch(`/api/users/signup`, {
+    fetch(`https://bopfishforum2.onrender.com/api/users/signup`, {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

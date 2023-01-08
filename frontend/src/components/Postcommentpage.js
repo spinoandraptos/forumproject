@@ -20,7 +20,7 @@ export default function Createcomment() {
   [])
 
   useEffect(() => {
-    fetch(`/api/${categoryid}/threads/${threadid}`, {
+    fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}`, {
             method: "GET",
             credentials: "include",
         })
@@ -38,7 +38,7 @@ export default function Createcomment() {
 
     if (flag === true) {
     input.preventDefault();
-    fetch(`/api/${categoryid}/threads/${threadid}/comments`, {
+    fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/comments`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
