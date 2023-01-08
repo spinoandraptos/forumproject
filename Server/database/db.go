@@ -17,3 +17,13 @@ const (
 	Password = "wVQiWsmDnqOoRfFb5OvfnyDsg024undw"
 	Dbname   = "forumdb_243o"
 )
+
+/*
+const (
+	Host     = "localhost"
+	Port     = 5432
+	User     = "postgres"
+	Password = "220402"
+	Dbname   = "forumdb"
+)
+*/

@@ -18,10 +18,8 @@ package main
 
 import (
 	"database/sql"
-	"embed"
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"log"
 	"net/http"
 
@@ -36,11 +34,13 @@ import (
 	"github.com/spinoandraptos/forumproject/Server/models"
 )
 
+/*
 // embed the react build files in main.go by specifying the directory where the build files are located
 // then store the entire filesystem in variable named "reactfiles" which functions as a virtual filesystem
 
-//go:embed frontend/build
+//go:embed frontend
 var reactfiles embed.FS
+*/
 
 var authtoken *jwtauth.JWTAuth
 
@@ -52,8 +52,12 @@ const secretkey = "123abc"
 // db.Ping will then attempt to open a connection with the database
 // if error occurs, error message will be printed
 func init() {
-	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
+	//since all the files are located under frontend/build/static
+	//we will serve the subdirectory of HOST/frontend/build/static directly using "filesystem" to avoid needing to access HOST/frontend/build/...
+	//can access HOST/... directly
+
 	var err error
+	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", database.Host, database.Port, database.User, database.Password, database.Dbname)
 	database.DB, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
@@ -73,14 +77,6 @@ if the URL path matches the format of /xxx/yyy, then the corresponding function 
 */
 
 func main() {
-
-	//since all the files are located under frontend/build/static
-	//we will serve the subdirectory of HOST/frontend/build/static directly using "filesystem" to avoid needing to access HOST/frontend/build/...
-	//can access HOST/... directly
-	filesystem, err := fs.Sub(reactfiles, "frontend/build")
-	helper.Catch(err)
-	newfilesystem := http.FS(filesystem)
-
 	//creation of a new router of name "router"
 	router := chi.NewRouter()
 
@@ -106,7 +102,6 @@ func main() {
 	//it is to be noted that the handlers below are merely functions and do not implement the Handler interface
 	//this is because using merely functions is clearer and simpler given we are not doing complex operations
 	router.Group(func(r chi.Router) {
-		r.Handle("/", http.FileServer(newfilesystem))
 		r.Post("/api/login", UserLogin)
 		r.Post("/api/search", handlers.SearchThread)
 		r.Post("/api/users/signup", handlers.CreateUser)
@@ -140,7 +135,7 @@ func main() {
 
 	//use router to start the server
 	//if there is error starting server (error value is not nil), error message is printed
-	err = http.ListenAndServe(":10000", router)
+	err := http.ListenAndServe(":10000", router)
 	helper.Catch(err)
 }
 
@@ -183,3 +178,41 @@ func UserLogout(w http.ResponseWriter, r *http.Request) {
 		Value:    "",
 	})
 }
+
+/*
+func handleStatic(w http.ResponseWriter, r *http.Request) {
+
+	reactfilesystem, err := fs.Sub(reactfiles, "frontend/build")
+	log.Println(reactfilesystem)
+	helper.Catch(err)
+
+	path := filepath.Clean(r.URL.Path)
+	if path == "/" {
+		path = "index.html"
+	}
+	path = strings.TrimPrefix(path, "/")
+
+	file, err := reactfilesystem.Open(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			log.Println("file", path, "not found:", err)
+			http.NotFound(w, r)
+		}
+		log.Println("file", path, "cannot be read:", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	contentType := mime.TypeByExtension(filepath.Ext(path))
+	w.Header().Set("Content-Type", contentType)
+	if strings.HasPrefix(path, "static/") {
+		w.Header().Set("Cache-Control", "public, max-age=31536000")
+	}
+	stat, err := file.Stat()
+	if err == nil && stat.Size() > 0 {
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", stat.Size()))
+	}
+
+	n, _ := io.Copy(w, file)
+	log.Println("file", path, "copied", n, "bytes")
+}*/
