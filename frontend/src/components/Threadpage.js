@@ -59,6 +59,7 @@ export default function Threadpage() {
     function Clickdeletecomment(value){
         fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${threadid}/comments/${value}`, {
           method: "DELETE",
+          credentials: "include",
           headers: { 'Content-Type': 'application/json' }
         })
         .then((response) => {

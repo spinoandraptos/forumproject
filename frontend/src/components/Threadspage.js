@@ -60,6 +60,7 @@ export default function Threadspage() {
     function Clickdeletethread(value){
       fetch(`https://bopfishforum2.onrender.com/api/${categoryid}/threads/${value}`, {
         method: "DELETE",
+        credentials: "include",
         headers: { 'Content-Type': 'application/json' }
       })
       .then((response) => {
