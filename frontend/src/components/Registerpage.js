@@ -1,3 +1,9 @@
+// this will serve as the component rendering the page for registering a new account
+// we will create states to manage data for username input and password input
+// upon inputting in the textbox data states for username and password will update
+// then after submitting the data stored in the state will be sent to Go backend through fetch API
+// link and navigate allow users to navigate to other components
+
 import React from "react"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";

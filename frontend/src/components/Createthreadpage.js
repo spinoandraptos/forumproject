@@ -1,3 +1,10 @@
+// this will serve as the component rendering the page for posting threads
+// we will create states to manage data for title input and content input
+// upon inputting in the textbox data states for title and content will update
+// then after submitting the data stored in the states will be sent to Go backend through fetch API
+// link and navigate allow users to navigate to other components
+// note: with the use of flag, submission is only possible if an user is logged in
+
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "./Authenticate";
 import { Link, useNavigate, useParams }  from "react-router-dom";
@@ -11,6 +18,7 @@ export default function Createthread() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const {categoryid} = useParams();
+
   const handleTitle = (input) => {
     setTitle(input.target.value);
   };

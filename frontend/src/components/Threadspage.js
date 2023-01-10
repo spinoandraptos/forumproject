@@ -1,3 +1,9 @@
+// this will serve as the component rendering the threads page for a category
+// we will create states to manage the data of retrieved category and threads
+// upon render, the data for category and threads (displayed on screen) are fetched via fetch API from Go backend
+// by checking the author username of each of the threads with that of current user, we separately provide additional functionalities like edit and delete for threads the current user posted
+// link and navigate allow users to navigate to other components
+
 import React from "react"
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./Authenticate";

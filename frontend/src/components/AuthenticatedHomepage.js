@@ -1,3 +1,10 @@
+// this will serve as the component rendering the authenticated homepage upon login
+// we will create states to manage the data of retrieved categories, current user, searchbar input, thread retrieevd from search, password input for user verification, and the status of modal
+// upon render, the data for categories (displayed on screen) and current user (username displayed) are fetched via fetch API from Go backend 
+// additionally, upon input in searchbar fetch api will attempt to retrieve the corresponding thread 
+// upon choosing to edit user info a modal will open to prompt for user verification, and if successful, direct user to page to edit user info
+// link and navigate allow users to navigate to other components
+
 import React from "react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect, useContext } from "react";
@@ -5,12 +12,6 @@ import { AuthContext } from "./Authenticate";
 import { Modal } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom";
 import "./Forum.css";
-
-//define the function homepage that will serve as the component rendering the homepage upon entry
-//first create the category state and state update function using the state hook useState
-//category data will be stored in the local state, which is initialised to be an empty array
-//then using the useEffect hook, fetch category data from API and update the state to contain the data
-//finally, render the data to be a visible format and output it to client
 
 export default function AHomepage() {
 

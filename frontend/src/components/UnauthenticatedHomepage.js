@@ -1,13 +1,13 @@
+// this will serve as the component rendering the unauthenticated homepage
+// we will create states to manage the data of retrieved categories, searchbar input, and thread retrieevd from search
+// upon render, the data for categories (displayed on screen) is fetched via fetch API from Go backend 
+// additionally, upon input in searchbar fetch api will attempt to retrieve the corresponding thread 
+// link and navigate allow users to navigate to other components
+
 import React from "react"
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Forum.css";
-
-//define the function homepage that will serve as the component rendering the homepage upon entry
-//first create the category state and state update function using the state hook useState
-//category data will be stored in the local state, which is initialised to be an empty array
-//then using the useEffect hook, fetch category data from API and update the state to contain the data
-//finally, render the data to be a visible format and output it to client
 
 export default function NHomepage() {
 

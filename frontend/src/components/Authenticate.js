@@ -1,3 +1,8 @@
+// this component serves to create the authentication context 
+// which will pass down values needed for authentication in all other components
+// we will pass down a function that, if logged in, can retrieve the current user's id and set a logged in flag to true
+// the states for user id and flag will also be passed down to all components
+
 import { createContext, useState } from "react";
 
   export const AuthContext = createContext();

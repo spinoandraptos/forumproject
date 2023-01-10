@@ -1,3 +1,14 @@
+// this will serve as the component rendering the page for editting user info
+// we will create states to manage data for retrieved user, username and password input, modal status and modal code
+// on render we retrieve the corresponding user data using fetch API and update state
+// upon inputting in the textbox data states for username and password will update
+// before submission, modal with code 2 will pop up for double confirmation
+// then after submitting the data stored in the states will be sent to Go backend through fetch API
+// users can also send delete request to Go backend through fetch API
+// before deleting user, modal with code 1 will pop up for double confirmation
+// link and navigate allow users to navigate to other components
+// note: with the use of flag, submission is only possible if an user is logged in
+
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "./Authenticate";
 import { useNavigate }  from "react-router-dom";

@@ -1,7 +1,8 @@
-//this is the entry point for the react app
-//this file sets out all the possible routes within the document
-//first we wrap the entire app within a router to handle routing via Link
-//
+// this is the entry point for the react app
+// this file sets out all the possible routes within the document by importing all the components to be rendered
+// we first wrap the app within our authcontextprovider so that all routes have access to authentication values passed down
+// then we wrap again within a router to handle routing via Link and Navigate
+// by default, on entry the url will be "/" so the non-authenticated homepage will be rendered
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react';
@@ -21,8 +22,6 @@ import Editcomment from './components/EditCommentpage';
 import Editthread from './components/Editthreadpage';
 import Edituser from './components/Edituserinfopage';
 import Logoutpage from './components/Logoutpage';
-
-
 
 export default function Forum() {
   return (

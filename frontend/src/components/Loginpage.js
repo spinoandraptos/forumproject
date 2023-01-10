@@ -1,3 +1,11 @@
+// this will serve as the component rendering the page for logging in
+// we will create states to manage data for username input and password input
+// upon inputting in the textbox data states for username and password will update
+// then after submitting the data stored in the states will be sent to Go backend through fetch API
+// if login is successful jwt is sent from backend and an item with title jwt and value username is stored in local storage
+// user automatically redirected to the authenticated mainpage
+// link and navigate allow users to navigate to other components
+
 import React from "react"
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

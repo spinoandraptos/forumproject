@@ -1,3 +1,9 @@
+// this will serve as the component rendering the comments page for a thread
+// we will create states to manage the data of retrieved thread and comments
+// upon render, the data for thread and comments (displayed on screen) are fetched via fetch API from Go backend
+// by checking the author username of each of the comments with that of current user, we separately provide additional functionalities like edit and delete for comments the current user posted
+// link and navigate allow users to navigate to other components
+
 import React from "react"
 import moment from "moment";
 import { useState, useEffect, useContext } from "react";

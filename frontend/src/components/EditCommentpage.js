@@ -1,3 +1,11 @@
+// this will serve as the component rendering the page for editting comments
+// we will create states to manage data for retrieved comment and content input
+// on render we retrieve the corresponding comment data using fetch API and update state to be displayed
+// upon inputting in the textbox data state for content will update
+// then after submitting the data stored in the state will be sent to Go backend through fetch API
+// link and navigate allow users to navigate to other components
+// note: with the use of flag, submission is only possible if an user is logged in
+
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "./Authenticate";
 import { Link, useNavigate, useParams }  from "react-router-dom";

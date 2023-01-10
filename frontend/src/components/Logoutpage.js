@@ -1,3 +1,9 @@
+// this will serve as the component rendering the page for logging out
+// on clicking logout button request is sent to Go backend through fetch API
+// upon logging out the jwt item with value username stored in local storage is removed and jwt cookie terminated
+// user automatically redirected to the unauthenticated mainpage
+// link and navigate allow users to navigate to other components
+
 import React from "react"
 import { Link, useNavigate } from "react-router-dom";
 
