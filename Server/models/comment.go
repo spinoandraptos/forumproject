@@ -2,7 +2,11 @@ package models
 
 import "time"
 
-// a thread comment has an unique ID, title, content, thread ID, author, author's ID
+// a thread comment has an unique ID, content, thread ID, author's name and author's ID
+// the struct also reflects time of creation and updating of comment
+// note: while the comment struct contains the author's name, this information is not stored in comments table
+// as it can simply be looked up through an inner join of tables
+
 type Comment struct {
 	ID             string `json:"id"`
 	Content        string `json:"content"`

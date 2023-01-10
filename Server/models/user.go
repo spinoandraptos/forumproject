@@ -1,10 +1,10 @@
 package models
 
-import (
-	"time"
-)
+import "time"
 
-// a forum user has an unique ID, username and password, and reflects time of creation and updating of user account
+// a forum user has an unique ID, username and password
+// the struct also reflects time of creation and updating of user account
+
 type User struct {
 	ID        uint32 `json:"id"`
 	Username  string `json:"username"`

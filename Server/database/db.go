@@ -7,7 +7,7 @@ import (
 )
 
 // define DB as a pointer to a database object
-// the DB is configured to be the one deployed on Render
+// the DB here is configured to be the one deployed on Render
 var DB *sql.DB
 
 const (
@@ -18,6 +18,7 @@ const (
 	Dbname   = "forumdb_243o"
 )
 
+//the commented out configuration is for the database on my local machine
 /*
 const (
 	Host     = "localhost"

@@ -7,12 +7,14 @@ package main
 	the package which contains functions for formatting I/O text (fmt),
 	the HTTP networking package(net/http),
 	the logging package (log)
+	the package that allows for encoding and decoding of JSON
 	the sql package with the corresponding postgres driver for working with database
 
 	and third-party packages:
 	the go-chi framework package
 	tne go-chi middleware package
 	the go-chi cors package
+	the go-chi jwt package
 	other custom packages used in this project
 */
 
@@ -23,39 +25,28 @@ import (
 	"log"
 	"net/http"
 
+	_ "github.com/lib/pq"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
-	_ "github.com/lib/pq"
 	"github.com/spinoandraptos/forumproject/Server/database"
 	"github.com/spinoandraptos/forumproject/Server/handlers"
 	"github.com/spinoandraptos/forumproject/Server/helper"
 	"github.com/spinoandraptos/forumproject/Server/models"
 )
 
-/*
-// embed the react build files in main.go by specifying the directory where the build files are located
-// then store the entire filesystem in variable named "reactfiles" which functions as a virtual filesystem
-
-//go:embed frontend
-var reactfiles embed.FS
-*/
-
 var authtoken *jwtauth.JWTAuth
 
 const secretkey = "123abc"
 
-// define the init function which connects to the postgresql database and creates authtoken as a pointer to a JWT
-// this will be run before main() as database package and authtoken will be imported into main package
-// then we define DB to point specifically to the forum database (specified by the info in psqlInfo which is sent to sql.Open)
+// define the init function which connects to the postgresql database and assigns "authtoken" as a pointer to a JWT
+// this will be run before main() as database package and "authtoken" will be imported into main package for use
+// then we let DB point specifically to the forum database (specified by the info in psqlInfo which is sent to sql.Open)
 // db.Ping will then attempt to open a connection with the database
-// if error occurs, error message will be printed
-func init() {
-	//since all the files are located under frontend/build/static
-	//we will serve the subdirectory of HOST/frontend/build/static directly using "filesystem" to avoid needing to access HOST/frontend/build/...
-	//can access HOST/... directly
 
+func init() {
 	var err error
 	authtoken = jwtauth.New("HS256", []byte(secretkey), nil)
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", database.Host, database.Port, database.User, database.Password, database.Dbname)
@@ -71,21 +62,21 @@ func init() {
 	}
 }
 
-/*
-route definitions: all HTTP requests will be directed by the Chi Router to the respective handlers
-if the URL path matches the format of /xxx/yyy, then the corresponding function will be called to send a response to the client
-*/
-
 func main() {
-	//creation of a new router of name "router"
+
+	// creation of a new router of name "router"
+
 	router := chi.NewRouter()
 
-	//use the go-chi inbuilt logger to log http requests and responses
+	// use the go-chi inbuilt logger to log http requests and responses
+	// use the go-chi inbuilt recoverer to recover from panics
+
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 
 	//using the cors middleware to perform preflight CORS checks on the server side
 	//this ensures that the server only permits browser requests fulfilling the below requirements which reduces potential misuse
+
 	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://bopfishforum.onrender.com"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
@@ -95,12 +86,11 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	//Register endpoints (GET, POST, PUT, DELETE) with their respective paths
-	//routes are grouped under 2 branches: one for routes that can only be accessed by authenticated users
+	//all HTTP requests will be directed by the Chi router to the respective handlers
+	//if the URL path matches that specified, then the corresponding handler will be called to send a response to the client
+	//routes are grouped under 2 branches: one for routes that can only be accessed by jwt-authenticated users
 	//and one for public (unauthenticated) users
-	//route handler functions are defined under the respective handler files
-	//it is to be noted that the handlers below are merely functions and do not implement the Handler interface
-	//this is because using merely functions is clearer and simpler given we are not doing complex operations
+
 	router.Group(func(r chi.Router) {
 		r.Post("/api/login", UserLogin)
 		r.Post("/api/search", handlers.SearchThread)
@@ -116,7 +106,7 @@ func main() {
 	router.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(authtoken))
 		r.Use(jwtauth.Authenticator)
-		r.Post("/api/users/{username}", handlers.Viewuser)
+		r.Post("/api/users/{username}", handlers.ViewUser)
 		r.Post("/api/users/{username}/id", handlers.ViewUserID)
 		r.Post("/api/users/logout", UserLogout)
 		r.Put("/api/users/{userid}", handlers.UpdateUser)
@@ -133,11 +123,17 @@ func main() {
 		r.Delete("/api/{categoryid}/threads/{threadid}/comments/{commentid}", handlers.DeleteComment)
 	})
 
-	//use router to start the server
-	//if there is error starting server (error value is not nil), error message is printed
+	//use router to start the server on port 10000 as Render uses this port
+
 	err := http.ListenAndServe(":10000", router)
 	helper.Catch(err)
 }
+
+// to login, we first retrieve the login info from the client-side request body
+// then we compare the info to that stored in the database
+// if there is a match, we will encode the user info into a jwt that will be sent to the client-side as a cookie
+// this cookie will help the user to keep logged in until they close the browser
+// note: cookie must be named "jwt" to be recognised by jwtauth.Verifier
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {
 
@@ -156,63 +152,24 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 			HttpOnly: true,
 			SameSite: http.SameSiteNoneMode,
 			Secure:   true,
-			Name:     "jwt", // Must be named "jwt" or else the token cannot be searched for by jwtauth.Verifier.
+			Name:     "jwt",
 			Value:    payloadclaims,
 		})
-		decodedclaims, err := authtoken.Decode(payloadclaims)
-		fmt.Printf("DEBUG: a sample jwt is %s\n\n", decodedclaims)
-		helper.Catch(err)
 	} else {
 		w.WriteHeader(404)
 	}
 }
 
+// to log out, we simply terminate the session of the user by removing the cookie through setting MaxAge<0
+
 func UserLogout(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &http.Cookie{
 		HttpOnly: true,
-		MaxAge:   -1, // Delete the cookie.
+		MaxAge:   -1,
 		SameSite: http.SameSiteLaxMode,
 		Secure:   true,
 		Name:     "jwt",
 		Value:    "",
 	})
 }
-
-/*
-func handleStatic(w http.ResponseWriter, r *http.Request) {
-
-	reactfilesystem, err := fs.Sub(reactfiles, "frontend/build")
-	log.Println(reactfilesystem)
-	helper.Catch(err)
-
-	path := filepath.Clean(r.URL.Path)
-	if path == "/" {
-		path = "index.html"
-	}
-	path = strings.TrimPrefix(path, "/")
-
-	file, err := reactfilesystem.Open(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			log.Println("file", path, "not found:", err)
-			http.NotFound(w, r)
-		}
-		log.Println("file", path, "cannot be read:", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	contentType := mime.TypeByExtension(filepath.Ext(path))
-	w.Header().Set("Content-Type", contentType)
-	if strings.HasPrefix(path, "static/") {
-		w.Header().Set("Cache-Control", "public, max-age=31536000")
-	}
-	stat, err := file.Stat()
-	if err == nil && stat.Size() > 0 {
-		w.Header().Set("Content-Length", fmt.Sprintf("%d", stat.Size()))
-	}
-
-	n, _ := io.Copy(w, file)
-	log.Println("file", path, "copied", n, "bytes")
-}*/
