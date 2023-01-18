@@ -142,9 +142,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&human)
 	response := database.DB.QueryRow("SELECT * FROM users WHERE Username = $1", human.Username)
 	err := response.Scan(&humanTest.ID, &humanTest.Username, &humanTest.Password, &humanTest.CreatedAt, &humanTest.UpdatedAt)
-	{
-		helper.Catch(err)
-	}
+	helper.Catch(err)
 	if human.Password == humanTest.Password {
 		_, payloadclaims, _ := authtoken.Encode(map[string]interface{}{"username": &human.Username, "password": &human.Password})
 		fmt.Printf("DEBUG: a sample jwt is %s\n\n", payloadclaims)
@@ -167,7 +165,7 @@ func UserLogout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		HttpOnly: true,
 		MaxAge:   -1,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteNoneMode,
 		Secure:   true,
 		Name:     "jwt",
 		Value:    "",
