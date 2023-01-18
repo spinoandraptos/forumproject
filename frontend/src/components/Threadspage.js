@@ -73,6 +73,7 @@ export default function Threadspage() {
         if (response.ok) {
             console.log("Response:" + response)
             alert("Thread Deletion Successful!")
+            window.location.reload()
         } else if (!response.ok) {
           alert("Thread Deletion Failed")
         }
