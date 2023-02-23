@@ -1,5 +1,4 @@
 ﻿# Bop Fish Forum
-Hi! My name is Man Juncheng (A0257872N). 
 Welcome to Bop Fish Forum, a full-stack forum project that I created using a Go backend and a React frontend while using a Postgresql database! This forum has the theme of fishing, and features 4 main categories for users to discuss fishing-related matters in Singapore.
 It is currently being deployed at https://bopfishforum.onrender.com/. Being a free hosted site, the page can be slow and unresponsive at times. It is also set to expire in April 2023.
 
